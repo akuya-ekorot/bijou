@@ -95,6 +95,7 @@ const authProvider: AuthBindings = {
             .eq("id", data.user.id);
 
           if (userData?.length) {
+            console.error("User already exists");
             return {
               success: false,
               error: {
@@ -124,6 +125,7 @@ const authProvider: AuthBindings = {
         };
       }
     } catch (error: any) {
+      console.error(error);
       return {
         success: false,
         error,

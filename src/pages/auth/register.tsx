@@ -46,7 +46,18 @@ export default function RegisterPage() {
       return;
     }
 
-    register(values);
+    register(values, {
+      onSuccess: (data) => {
+        if (!data.success) {
+          form.setError("email", {
+            message: data.error?.message,
+          });
+          return;
+        }
+
+        login(values);
+      },
+    });
   }
 
   return (
@@ -63,7 +74,11 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Jane Doe" {...field} />
+                  <Input
+                    autoComplete="name"
+                    placeholder="Jane Doe"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>Enter your full name</FormDescription>
                 <FormMessage />
@@ -79,6 +94,7 @@ export default function RegisterPage() {
                 <FormControl>
                   <Input
                     type={"email"}
+                    autoComplete="email"
                     placeholder="your@email.com"
                     {...field}
                   />
@@ -96,6 +112,7 @@ export default function RegisterPage() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="new-password"
                     type={"password"}
                     placeholder="Password..."
                     {...field}
@@ -114,6 +131,7 @@ export default function RegisterPage() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="new-password"
                     type={"password"}
                     placeholder="Confirm password..."
                     {...field}
