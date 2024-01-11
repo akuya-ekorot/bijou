@@ -18,7 +18,7 @@ import routerBindings, {
 } from "@refinedev/react-router-v6";
 import { ShopList, ShopCreate, ShopEdit, ShopShow } from "./pages/shops";
 import { Layout } from "./components/layout";
-import "./App.css";
+import "./globals.css";
 import { supabaseClient } from "./utility";
 import authProvider from "./authProvider";
 import {
