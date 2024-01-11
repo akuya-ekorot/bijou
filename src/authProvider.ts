@@ -60,7 +60,17 @@ const authProvider: AuthBindings = {
       },
     };
   },
-  register: async ({ email, name, password, role }) => {
+  register: async ({
+    email,
+    name,
+    password,
+    redirectPath = "/email-confirmation",
+  }: {
+    email: string;
+    name: string;
+    password: string;
+    redirectPath: string;
+  }) => {
     try {
       const { data, error } = await supabaseClient.auth.signUp({
         email,
@@ -68,6 +78,7 @@ const authProvider: AuthBindings = {
       });
 
       if (error) {
+        console.error(error);
         return {
           success: false,
           error,
@@ -93,11 +104,13 @@ const authProvider: AuthBindings = {
             };
           }
 
-          const { error } = await supabaseClient
+          const { data: registeredUser, error } = await supabaseClient
             .from("users")
-            .insert([{ id: data.user.id, email, role, name }]);
+            .insert([{ id: data.user.id, email, name }])
+            .select();
 
           if (error) {
+            console.error(error);
             return {
               success: false,
               error,
@@ -107,7 +120,7 @@ const authProvider: AuthBindings = {
 
         return {
           success: true,
-          redirectTo: "/",
+          redirectTo: redirectPath,
         };
       }
     } catch (error: any) {

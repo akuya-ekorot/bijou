@@ -27,6 +27,8 @@ import {
   CategoryEdit,
   CategoryShow,
 } from "./pages/categories";
+import RegisterPage from "./pages/auth/register";
+import EmailConfirmationPage from "./pages/auth/email-confirmation";
 
 function App() {
   return (
@@ -134,9 +136,10 @@ function App() {
                     />
                   }
                 />
+                <Route path="/register" Component={RegisterPage} />
                 <Route
-                  path="/register"
-                  element={<AuthPage type="register" />}
+                  path="/email-confirmation"
+                  Component={EmailConfirmationPage}
                 />
                 <Route
                   path="/forgot-password"
