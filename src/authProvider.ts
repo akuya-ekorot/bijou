@@ -3,7 +3,7 @@ import { AuthBindings } from "@refinedev/core";
 import { supabaseClient } from "./utility";
 
 const authProvider: AuthBindings = {
-  login: async ({ email, password, providerName }) => {
+  login: async ({ email, password, providerName, role }) => {
     // sign in with oauth
     try {
       if (providerName) {
@@ -60,7 +60,7 @@ const authProvider: AuthBindings = {
       },
     };
   },
-  register: async ({ email, password }) => {
+  register: async ({ email, name, password, role }) => {
     try {
       const { data, error } = await supabaseClient.auth.signUp({
         email,
@@ -75,6 +75,36 @@ const authProvider: AuthBindings = {
       }
 
       if (data) {
+        // add user to the database
+        if (data.user) {
+          // check if user already exists
+          const { data: userData } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("id", data.user.id);
+
+          if (userData?.length) {
+            return {
+              success: false,
+              error: {
+                message: "Register failed",
+                name: "User already exists",
+              },
+            };
+          }
+
+          const { error } = await supabaseClient
+            .from("users")
+            .insert([{ id: data.user.id, email, role, name }]);
+
+          if (error) {
+            return {
+              success: false,
+              error,
+            };
+          }
+        }
+
         return {
           success: true,
           redirectTo: "/",
@@ -95,6 +125,7 @@ const authProvider: AuthBindings = {
       },
     };
   },
+
   forgotPassword: async ({ email }) => {
     try {
       const { data, error } = await supabaseClient.auth.resetPasswordForEmail(
