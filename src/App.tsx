@@ -17,22 +17,17 @@ import routerBindings, {
   UnsavedChangesNotifier,
   DocumentTitleHandler,
 } from "@refinedev/react-router-v6";
-import {
-  BlogPostList,
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostShow,
-} from "./pages/blog-posts";
+import { ShopList, ShopCreate, ShopEdit, ShopShow } from "./pages/shops";
+import { Layout } from "./components/layout";
+import "./App.css";
+import { supabaseClient } from "./utility";
+import authProvider from "./authProvider";
 import {
   CategoryList,
   CategoryCreate,
   CategoryEdit,
   CategoryShow,
 } from "./pages/categories";
-import { Layout } from "./components/layout";
-import "./App.css";
-import { supabaseClient } from "./utility";
-import authProvider from "./authProvider";
 
 function App() {
   return (
@@ -47,13 +42,14 @@ function App() {
             routerProvider={routerBindings}
             resources={[
               {
-                name: "blog_posts",
-                list: "/blog-posts",
-                create: "/blog-posts/create",
-                edit: "/blog-posts/edit/:id",
-                show: "/blog-posts/show/:id",
+                name: "shops",
+                list: "/shops",
+                create: "/shops/create",
+                edit: "/shops/edit/:id",
+                show: "/shops/show/:id",
                 meta: {
                   canDelete: true,
+                  idColumnName: "handle",
                 },
               },
               {
@@ -89,13 +85,13 @@ function App() {
               >
                 <Route
                   index
-                  element={<NavigateToResource resource="blog_posts" />}
+                  element={<NavigateToResource resource="shops" />}
                 />
-                <Route path="/blog-posts">
-                  <Route index element={<BlogPostList />} />
-                  <Route path="create" element={<BlogPostCreate />} />
-                  <Route path="edit/:id" element={<BlogPostEdit />} />
-                  <Route path="show/:id" element={<BlogPostShow />} />
+                <Route path="/shops">
+                  <Route index element={<ShopList />} />
+                  <Route path="create" element={<ShopCreate />} />
+                  <Route path="edit/:id" element={<ShopEdit />} />
+                  <Route path="show/:id" element={<ShopShow />} />
                 </Route>
                 <Route path="/categories">
                   <Route index element={<CategoryList />} />
