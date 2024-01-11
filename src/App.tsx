@@ -29,6 +29,7 @@ import {
 } from "./pages/categories";
 import RegisterPage from "./pages/auth/register";
 import EmailConfirmationPage from "./pages/auth/email-confirmation";
+import LoginPage from "./pages/auth/login";
 
 function App() {
   return (
@@ -111,31 +112,7 @@ function App() {
                   </Authenticated>
                 }
               >
-                <Route
-                  path="/login"
-                  element={
-                    <AuthPage
-                      type="login"
-                      renderContent={(content) => (
-                        <div>
-                          <p
-                            style={{
-                              padding: 10,
-                              color: "#004085",
-                              backgroundColor: "#cce5ff",
-                              borderColor: "#b8daff",
-                              textAlign: "center",
-                            }}
-                          >
-                            email: info@refine.dev
-                            <br /> password: refine-supabase
-                          </p>
-                          {content}
-                        </div>
-                      )}
-                    />
-                  }
-                />
+                <Route path="/login" Component={LoginPage} />
                 <Route path="/register" Component={RegisterPage} />
                 <Route
                   path="/email-confirmation"
