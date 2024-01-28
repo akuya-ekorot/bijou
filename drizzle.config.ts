@@ -6,6 +6,7 @@ export default {
   out: "./lib/db/migrations",
   driver: "pg",
   dbCredentials: {
-    connectionString: env.DATABASE_URL.concat("?sslmode=require"),
-  }
+    connectionString: env.DATABASE_URL,
+  },
 } satisfies Config;
+

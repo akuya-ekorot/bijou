@@ -1,24 +1,18 @@
 import { env } from "@/lib/env.mjs";
-  
-import { drizzle } from "drizzle-orm/vercel-postgres";
-import { migrate } from "drizzle-orm/vercel-postgres/migrator";
-import { sql } from '@vercel/postgres';
 
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { db } from ".";
 
 const runMigrate = async () => {
   if (!env.DATABASE_URL) {
     throw new Error("DATABASE_URL is not defined");
   }
 
-  
-  const db = drizzle(sql);
-
-
   console.log("⏳ Running migrations...");
 
   const start = Date.now();
 
-  await migrate(db, { migrationsFolder: 'lib/db/migrations' });
+  await migrate(db, { migrationsFolder: "lib/db/migrations" });
 
   const end = Date.now();
 
@@ -32,3 +26,4 @@ runMigrate().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
