@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
 import NextAuthProvider from "@/lib/auth/Provider";
 import TrpcProvider from "@/lib/trpc/Provider";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { getUserAuth } from "@/lib/auth/utils";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,13 +32,7 @@ export default function RootLayout({
         >
           <NextAuthProvider>
             <TrpcProvider cookies={cookies().toString()}>
-              <div className="flex h-screen">
-                <Sidebar />
-                <main className="flex-1 md:p-8 pt-2 p-8 overflow-y-auto">
-                  <Navbar />
-                  {children}
-                </main>
-              </div>
+              <div className="h-screen w-full">{children}</div>
             </TrpcProvider>
           </NextAuthProvider>
 

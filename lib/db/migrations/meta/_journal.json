@@ -15,6 +15,20 @@
       "when": 1706434598466,
       "tag": "0001_unique_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1706446649862,
+      "tag": "0002_gray_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1706447021636,
+      "tag": "0003_cultured_banshee",
+      "breakpoints": true
     }
   ]
 }

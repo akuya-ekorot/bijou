@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { type Shop, CompleteShop } from "@/lib/db/schema/shops";
 import Modal from "@/components/shared/Modal";
+import { CompleteShop, type Shop } from "@/lib/db/schema/shops";
+import { cn } from "@/lib/utils";
 
-import { useOptimisticShops } from "@/app/shops/useOptimisticShops";
+import { useOptimisticShops } from "@/app/useOptimisticShops";
 import { Button } from "@/components/ui/button";
-import ShopForm from "./ShopForm";
 import { PlusIcon } from "lucide-react";
+import ShopForm from "./ShopForm";
 
 type TOpenModal = (shop?: Shop) => void;
 
@@ -40,9 +40,9 @@ export default function ShopList({ shops }: { shops: CompleteShop[] }) {
       </Modal>
 
       {!!shops.length && (
-        <div className="absolute right-0 top-0 ">
-          <Button onClick={() => openModal()} variant={"outline"}>
-            +
+        <div className="absolute bottom-0 w-full flex justify-center">
+          <Button onClick={() => openModal()} variant={"secondary"}>
+            Create New Shop
           </Button>
         </div>
       )}
@@ -50,7 +50,7 @@ export default function ShopList({ shops }: { shops: CompleteShop[] }) {
       {optimisticShops.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <ul>
+        <ul className="p-4">
           {optimisticShops.map((shop) => (
             <Shop shop={shop} key={shop.id} openModal={openModal} />
           ))}
@@ -73,16 +73,16 @@ const Shop = ({
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
+        "flex items-center border rounded-md p-2 justify-between my-2",
         mutating ? "opacity-30 animate-pulse" : "",
         deleting ? "text-destructive" : "",
       )}
     >
-      <div className="w-full">
+      <div className="w-full px-2">
         <div>{shop.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/shops/" + shop.id}>Edit</Link>
+        <Link href={`/${shop.slug}`}>Go</Link>
       </Button>
     </li>
   );

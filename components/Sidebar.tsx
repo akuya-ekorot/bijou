@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 
 import { AuthSession, getUserAuth } from "@/lib/auth/utils";
 
-const Sidebar = async () => {
+const Sidebar = async ({ shopSlug }: { shopSlug: string }) => {
   const session = await getUserAuth();
   if (session.session === null) return null;
 
@@ -14,7 +14,7 @@ const Sidebar = async () => {
       <div className="flex flex-col justify-between h-full">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold ml-4">Logo</h3>
-          <SidebarItems />
+          <SidebarItems shopSlug={shopSlug} />
         </div>
         <UserDetails session={session} />
       </div>

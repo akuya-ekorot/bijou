@@ -1,0 +1,1 @@
+ALTER TABLE "products" ADD CONSTRAINT "products_slug_shop_id_unique" UNIQUE NULLS NOT DISTINCT("slug","shop_id");
