@@ -14,17 +14,8 @@ import { PlusIcon } from "lucide-react";
 
 type TOpenModal = (shop?: Shop) => void;
 
-export default function ShopList({
-  shops,
-   
-}: {
-  shops: CompleteShop[];
-   
-}) {
-  const { optimisticShops, addOptimisticShop } = useOptimisticShops(
-    shops,
-     
-  );
+export default function ShopList({ shops }: { shops: CompleteShop[] }) {
+  const { optimisticShops, addOptimisticShop } = useOptimisticShops(shops);
   const [open, setOpen] = useState(false);
   const [activeShop, setActiveShop] = useState<Shop | null>(null);
   const openModal = (shop?: Shop) => {
@@ -45,24 +36,23 @@ export default function ShopList({
           addOptimistic={addOptimisticShop}
           openModal={openModal}
           closeModal={closeModal}
-          
         />
       </Modal>
-      <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
-          +
-        </Button>
-      </div>
+
+      {!!shops.length && (
+        <div className="absolute right-0 top-0 ">
+          <Button onClick={() => openModal()} variant={"outline"}>
+            +
+          </Button>
+        </div>
+      )}
+
       {optimisticShops.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
         <ul>
           {optimisticShops.map((shop) => (
-            <Shop
-              shop={shop}
-              key={shop.id}
-              openModal={openModal}
-            />
+            <Shop shop={shop} key={shop.id} openModal={openModal} />
           ))}
         </ul>
       )}
@@ -92,9 +82,7 @@ const Shop = ({
         <div>{shop.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/shops/" + shop.id }>
-          Edit
-        </Link>
+        <Link href={"/shops/" + shop.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -111,7 +99,8 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Shops </Button>
+          <PlusIcon className="h-4" /> New Shops{" "}
+        </Button>
       </div>
     </div>
   );

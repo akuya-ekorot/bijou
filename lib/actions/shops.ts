@@ -1,11 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import {
-  createShop,
-  deleteShop,
-  updateShop,
-} from "@/lib/api/shops/mutations";
+import { createShop, deleteShop, updateShop } from "@/lib/api/shops/mutations";
 import {
   ShopId,
   NewShopParams,
@@ -56,3 +52,4 @@ export const deleteShopAction = async (input: ShopId) => {
     return handleErrors(e);
   }
 };
+

@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-
 import { type Shop, insertShopParams } from "@/lib/db/schema/shops";
 import {
   createShopAction,
@@ -21,9 +20,7 @@ import {
   updateShopAction,
 } from "@/lib/actions/shops";
 
-
 const ShopForm = ({
-  
   shop,
   openModal,
   closeModal,
@@ -31,7 +28,7 @@ const ShopForm = ({
   postSuccess,
 }: {
   shop?: Shop | null;
-  
+
   openModal?: (shop?: Shop) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -41,7 +38,7 @@ const ShopForm = ({
     useValidatedForm<Shop>(insertShopParams);
   const { toast } = useToast();
   const editing = !!shop?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -87,10 +84,11 @@ const ShopForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingShop,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingShop,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updateShopAction({ ...values, id: shop.id })
@@ -98,7 +96,7 @@ const ShopForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingShop 
+          values: pendingShop,
         };
         onSuccess(
           editing ? "update" : "create",
@@ -113,9 +111,9 @@ const ShopForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange} className={"space-y-4"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -130,13 +128,11 @@ const ShopForm = ({
           className={cn(errors?.name ? "ring ring-destructive" : "")}
           defaultValue={shop?.name ?? ""}
         />
-        {errors?.name ? (
+        {errors?.name && (
           <p className="text-xs text-destructive mt-2">{errors.name[0]}</p>
-        ) : (
-          <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -151,13 +147,11 @@ const ShopForm = ({
           className={cn(errors?.slug ? "ring ring-destructive" : "")}
           defaultValue={shop?.slug ?? ""}
         />
-        {errors?.slug ? (
+        {errors?.slug && (
           <p className="text-xs text-destructive mt-2">{errors.slug[0]}</p>
-        ) : (
-          <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -172,10 +166,8 @@ const ShopForm = ({
           className={cn(errors?.logoUrl ? "ring ring-destructive" : "")}
           defaultValue={shop?.logoUrl ?? ""}
         />
-        {errors?.logoUrl ? (
+        {errors?.logoUrl && (
           <p className="text-xs text-destructive mt-2">{errors.logoUrl[0]}</p>
-        ) : (
-          <div className="h-6" />
         )}
       </div>
       {/* Schema fields end */}

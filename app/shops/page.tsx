@@ -25,10 +25,10 @@ const Shops = async () => {
   await checkAuth();
 
   const { shops } = await getShops();
-  
+
   return (
     <Suspense fallback={<Loading />}>
-      <ShopList shops={shops}  />
+      <ShopList shops={shops} />
     </Suspense>
   );
 };

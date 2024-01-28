@@ -44,10 +44,15 @@ export const shops = pgTable(
 const baseSchema = createSelectSchema(shops).omit(timestamps);
 
 export const insertShopSchema = createInsertSchema(shops).omit(timestamps);
-export const insertShopParams = baseSchema.extend({}).omit({
-  id: true,
-  userId: true,
-});
+export const insertShopParams = baseSchema
+  .extend({
+    name: z.string().min(3),
+    slug: z.string().min(3),
+  })
+  .omit({
+    id: true,
+    userId: true,
+  });
 
 export const updateShopSchema = baseSchema;
 export const updateShopParams = baseSchema.extend({}).omit({
