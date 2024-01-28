@@ -1,6 +1,13 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 export default function SignIn() {
   const { data: session, status } = useSession();
@@ -21,9 +28,20 @@ export default function SignIn() {
     );
   }
   return (
-    <div className="space-y-3">
-      <p>Not signed in </p>
-      <Button onClick={() => signIn()}>Sign in</Button>
+    <div className="w-full min-h-screen flex flex-col items-center pt-16 gap-3">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Sign in</CardTitle>
+          <CardDescription>
+            Sign in with Google below to continue
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button className="w-full" onClick={() => signIn("google")}>
+            Continue with Google
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
