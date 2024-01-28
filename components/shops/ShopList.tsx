@@ -82,7 +82,7 @@ const Shop = ({
         <div>{shop.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/shops/" + shop.id}>Go</Link>
+        <Link href={`/${shop.slug}`}>Go</Link>
       </Button>
     </li>
   );
