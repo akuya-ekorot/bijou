@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 import Loading from "@/app/loading";
 
-
 export const revalidate = 0;
 
 export default async function ShopPage({
@@ -18,7 +17,6 @@ export default async function ShopPage({
 }: {
   params: { shopId: string };
 }) {
-
   return (
     <main className="overflow-auto">
       <Shop id={params.shopId} />
@@ -30,7 +28,6 @@ const Shop = async ({ id }: { id: string }) => {
   await checkAuth();
 
   const { shop } = await getShopById(id);
-  
 
   if (!shop) notFound();
   return (
@@ -41,7 +38,7 @@ const Shop = async ({ id }: { id: string }) => {
             <ChevronLeftIcon />
           </Link>
         </Button>
-        <OptimisticShop shop={shop}  />
+        <OptimisticShop shop={shop} />
       </div>
     </Suspense>
   );

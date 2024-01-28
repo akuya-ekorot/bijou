@@ -1,26 +1,41 @@
+import ShopList from "@/components/shops/ShopList";
 import { getShops } from "@/lib/api/shops/queries";
-import { getUserAuth } from "@/lib/auth/utils";
-import { redirect } from "next/navigation";
+import { checkAuth } from "@/lib/auth/utils";
+import { Suspense } from "react";
+import Loading from "./loading";
+import CreateShop from "@/components/shops/CreteShop";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default async function Home() {
-  const { session } = await getUserAuth();
+export default async function ShopsPage() {
   const { shops } = await getShops();
-
-  if (!session) {
-    redirect("/auth");
-  }
-
-  if (!shops.length) {
-    redirect("/shops");
-  }
+  const hasShops = shops.length > 0;
 
   return (
-    <main className="space-y-4">
-      {shops.length > 0 ? (
-        <pre className="bg-secondary p-4 rounded-sm shadow-sm text-secondary-foreground break-all whitespace-break-spaces">
-          {JSON.stringify(shops, null, 2)}
-        </pre>
-      ) : null}
+    <main>
+      <div className="relative flex flex-col items-center">
+        <div className="flex justify-between">
+          <h1 className="font-semibold text-2xl my-2">
+            {hasShops ? "Pick shop" : "Create shops"}
+          </h1>
+        </div>
+        <div className="w-full max-w-xl min-h-">
+          {hasShops ? <Shops /> : <CreateShop />}
+        </div>
+      </div>
     </main>
   );
 }
+
+const Shops = async () => {
+  await checkAuth();
+
+  const { shops } = await getShops();
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <ScrollArea className="pb-12 h-96">
+        <ShopList shops={shops} />
+      </ScrollArea>
+    </Suspense>
+  );
+};
