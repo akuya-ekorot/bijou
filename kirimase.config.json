@@ -1,0 +1,19 @@
+{
+  "hasSrc": false,
+  "packages": [
+    "shadcn-ui",
+    "drizzle",
+    "next-auth",
+    "trpc",
+    "resend"
+  ],
+  "preferredPackageManager": "bun",
+  "t3": false,
+  "alias": "@",
+  "rootPath": "",
+  "componentLib": "shadcn-ui",
+  "driver": "pg",
+  "provider": "vercel-pg",
+  "orm": "drizzle",
+  "auth": "next-auth"
+}
