@@ -9,15 +9,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import ShopForm from "@/components/shops/ShopForm";
 
-
-export default function OptimisticShop({ 
-  shop,
-   
-}: { 
-  shop: Shop; 
-  
-  
-}) {
+export default function OptimisticShop({ shop }: { shop: Shop }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Shop) => {
     setOpen(true);
@@ -32,7 +24,6 @@ export default function OptimisticShop({
       <Modal open={open} setOpen={setOpen}>
         <ShopForm
           shop={shop}
-          
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateShop}

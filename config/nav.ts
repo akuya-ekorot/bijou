@@ -28,6 +28,4 @@ export const additionalLinks: AdditionalLinks[] = [
       },
     ],
   },
-
 ];
-

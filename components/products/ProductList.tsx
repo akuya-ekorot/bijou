@@ -1,29 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { type Product, CompleteProduct } from "@/lib/db/schema/products";
+import { useOptimisticProducts } from "@/app/[shopSlug]/products/useOptimisticProducts";
 import Modal from "@/components/shared/Modal";
-import { type Shop } from "@/lib/db/schema/shops";
-import { useOptimisticProducts } from "@/app/products/useOptimisticProducts";
 import { Button } from "@/components/ui/button";
-import ProductForm from "./ProductForm";
+import { CompleteProduct, type Product } from "@/lib/db/schema/products";
+import { type Shop } from "@/lib/db/schema/shops";
+import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
+import ProductForm from "./ProductForm";
 
 type TOpenModal = (product?: Product) => void;
 
 export default function ProductList({
   products,
-  shops 
+  shops,
 }: {
   products: CompleteProduct[];
-  shops: Shop[] 
+  shops: Shop[];
 }) {
   const { optimisticProducts, addOptimisticProduct } = useOptimisticProducts(
     products,
-    shops 
+    shops,
   );
   const [open, setOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
@@ -92,9 +92,7 @@ const Product = ({
         <div>{product.product.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/products/" + product.product.id }>
-          Edit
-        </Link>
+        <Link href={"/products/" + product.product.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -111,7 +109,8 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Products </Button>
+          <PlusIcon className="h-4" /> New Products{" "}
+        </Button>
       </div>
     </div>
   );

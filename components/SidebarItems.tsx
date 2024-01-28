@@ -14,13 +14,14 @@ export interface SidebarLink {
   icon: LucideIcon;
 }
 
-const SidebarItems = () => {
+const SidebarItems = ({ shopSlug }: { shopSlug: string }) => {
   return (
     <>
-      <SidebarLinkGroup links={defaultLinks} />
+      <SidebarLinkGroup shopSlug={shopSlug} links={defaultLinks} />
       {additionalLinks.length > 0
         ? additionalLinks.map((l) => (
             <SidebarLinkGroup
+              shopSlug={shopSlug}
               links={l.links}
               title={l.title}
               border
@@ -37,13 +38,17 @@ const SidebarLinkGroup = ({
   links,
   title,
   border,
+  shopSlug,
 }: {
   links: SidebarLink[];
   title?: string;
   border?: boolean;
+  shopSlug: string;
 }) => {
   const fullPathname = usePathname();
-  const pathname = "/" + fullPathname.split("/")[1];
+  const pathname = `/${fullPathname.split("/")[1] ?? ""}${
+    fullPathname.split("/")[2] ? `/${fullPathname.split("/")[2]}` : ""
+  }`;
 
   return (
     <div className={border ? "border-border border-t my-8 pt-4" : ""}>
@@ -55,7 +60,13 @@ const SidebarLinkGroup = ({
       <ul>
         {links.map((link) => (
           <li key={link.title}>
-            <SidebarLink link={link} active={pathname === link.href} />
+            <SidebarLink
+              link={link}
+              active={
+                pathname === `/${shopSlug}${link.href === "/" ? "" : link.href}`
+              }
+              shopSlug={shopSlug}
+            />
           </li>
         ))}
       </ul>
@@ -65,13 +76,15 @@ const SidebarLinkGroup = ({
 const SidebarLink = ({
   link,
   active,
+  shopSlug,
 }: {
   link: SidebarLink;
   active: boolean;
+  shopSlug: string;
 }) => {
   return (
     <Link
-      href={link.href}
+      href={`/${shopSlug}${link.href}`}
       className={`group transition-colors p-2 inline-block hover:bg-popover hover:text-primary text-muted-foreground text-xs hover:shadow rounded-md w-full${
         active ? " text-primary font-semibold" : ""
       }`}
