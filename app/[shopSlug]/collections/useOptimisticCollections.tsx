@@ -10,7 +10,7 @@ export type TAddOptimistic = (action: OptimisticAction<Collection>) => void;
 
 export const useOptimisticCollections = (
   collections: CompleteCollection[],
-  shops: Shop[],
+  shop: Shop,
 ) => {
   const [optimisticCollections, addOptimisticCollection] = useOptimistic(
     collections,
@@ -20,7 +20,7 @@ export const useOptimisticCollections = (
     ): CompleteCollection[] => {
       const { data } = action;
 
-      const optimisticShop = shops.find((shop) => shop.id === data.shopId)!;
+      const optimisticShop = shop;
 
       const optimisticCollection = {
         collection: { ...data, id: "optimistic" },

@@ -6,20 +6,12 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 
-import { type TAddOptimistic } from "@/app/collections/useOptimisticCollections";
+import { type TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
 import { cn, type Action } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   createCollectionAction,
@@ -33,7 +25,7 @@ import {
 import { type Shop } from "@/lib/db/schema/shops";
 
 const CollectionForm = ({
-  shops,
+  shop,
   collection,
   openModal,
   closeModal,
@@ -41,7 +33,7 @@ const CollectionForm = ({
   postSuccess,
 }: {
   collection?: Collection | null;
-  shops: Shop[];
+  shop: Shop;
   openModal?: (collection?: Collection) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -76,12 +68,14 @@ const CollectionForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (shopId: string, data: FormData) => {
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const collectionParsed =
-      await insertCollectionParams.safeParseAsync(payload);
+    const collectionParsed = await insertCollectionParams.safeParseAsync({
+      ...payload,
+      shopId,
+    });
     if (!collectionParsed.success) {
       setErrors(collectionParsed?.error.flatten().fieldErrors);
       return;
@@ -124,8 +118,14 @@ const CollectionForm = ({
     }
   };
 
+  const handleSubmitWithShopId = handleSubmit.bind(null, shop.id);
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form
+      action={handleSubmitWithShopId}
+      onChange={handleChange}
+      className={"space-y-8"}
+    >
       {/* Schema fields start */}
       <div>
         <Label
@@ -216,36 +216,6 @@ const CollectionForm = ({
         )}
       </div>
 
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.shopId ? "text-destructive" : "",
-          )}
-        >
-          Shop
-        </Label>
-        <Select defaultValue={collection?.shopId} name="shopId">
-          <SelectTrigger
-            className={cn(errors?.shopId ? "ring ring-destructive" : "")}
-          >
-            <SelectValue placeholder="Select a shop" />
-          </SelectTrigger>
-          <SelectContent>
-            {shops?.map((shop) => (
-              <SelectItem key={shop.id} value={shop.id.toString()}>
-                {shop.id}
-                {/* TODO: Replace with a field from the shop model */}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors?.shopId ? (
-          <p className="text-xs text-destructive mt-2">{errors.shopId[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
       {/* Schema fields end */}
 
       {/* Save Button */}

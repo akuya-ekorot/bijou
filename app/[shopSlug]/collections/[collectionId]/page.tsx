@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { getCollectionById } from "@/lib/api/collections/queries";
-import { getShops } from "@/lib/api/shops/queries";
+import { getShopBySlug, getShops } from "@/lib/api/shops/queries";
 import { checkAuth } from "@/lib/auth/utils";
 import OptimisticCollection from "./OptimisticCollection";
 
@@ -16,20 +16,26 @@ export const revalidate = 0;
 export default async function CollectionPage({
   params,
 }: {
-  params: { collectionId: string };
+  params: { collectionId: string; shopSlug: string };
 }) {
   return (
     <main className="overflow-auto">
-      <Collection id={params.collectionId} />
+      <Collection shopSlug={params.shopSlug} id={params.collectionId} />
     </main>
   );
 }
 
-const Collection = async ({ id }: { id: string }) => {
+const Collection = async ({
+  id,
+  shopSlug,
+}: {
+  id: string;
+  shopSlug: string;
+}) => {
   await checkAuth();
 
   const { collection } = await getCollectionById(id);
-  const { shops } = await getShops();
+  const { shop } = await getShopBySlug(shopSlug);
 
   if (!collection) notFound();
   return (
@@ -40,10 +46,7 @@ const Collection = async ({ id }: { id: string }) => {
             <ChevronLeftIcon />
           </Link>
         </Button>
-        <OptimisticCollection
-          collection={collection.collection}
-          shops={shops}
-        />
+        <OptimisticCollection collection={collection.collection} shop={shop} />
       </div>
     </Suspense>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { TAddOptimistic } from "@/app/collections/useOptimisticCollections";
+import { TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
 import { type Collection } from "@/lib/db/schema/collections";
 import { cn } from "@/lib/utils";
 import { useOptimistic, useState } from "react";
@@ -12,11 +12,10 @@ import { type Shop } from "@/lib/db/schema/shops";
 
 export default function OptimisticCollection({
   collection,
-  shops,
+  shop,
 }: {
   collection: Collection;
-
-  shops: Shop[];
+  shop: Shop;
 }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Collection) => {
@@ -33,7 +32,7 @@ export default function OptimisticCollection({
       <Modal open={open} setOpen={setOpen}>
         <CollectionForm
           collection={collection}
-          shops={shops}
+          shop={shop}
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateCollection}

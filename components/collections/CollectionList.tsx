@@ -19,13 +19,13 @@ type TOpenModal = (collection?: Collection) => void;
 
 export default function CollectionList({
   collections,
-  shops,
+  shop,
 }: {
   collections: CompleteCollection[];
-  shops: Shop[];
+  shop: Shop;
 }) {
   const { optimisticCollections, addOptimisticCollection } =
-    useOptimisticCollections(collections, shops);
+    useOptimisticCollections(collections, shop);
   const [open, setOpen] = useState(false);
   const [activeCollection, setActiveCollection] = useState<Collection | null>(
     null,
@@ -48,7 +48,7 @@ export default function CollectionList({
           addOptimistic={addOptimisticCollection}
           openModal={openModal}
           closeModal={closeModal}
-          shops={shops}
+          shop={shop}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
