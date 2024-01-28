@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import Loading from "@/app/loading";
 import ProductList from "@/components/products/ProductList";
-import { getProducts, getProductsByShopId } from "@/lib/api/products/queries";
+import { getProductsByShopId } from "@/lib/api/products/queries";
 import { getShopBySlug } from "@/lib/api/shops/queries";
 import { checkAuth } from "@/lib/auth/utils";
 

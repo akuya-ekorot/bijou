@@ -1,7 +1,7 @@
 import { type getCollectionProducts } from "@/lib/api/collectionProducts/queries";
 import { users } from "@/lib/db/schema/auth";
 import { sql } from "drizzle-orm";
-import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, unique, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { collections } from "./collections";
@@ -9,26 +9,32 @@ import { products } from "./products";
 
 import { nanoid, timestamps } from "@/lib/utils";
 
-export const collectionProducts = pgTable("collection_products", {
-  id: varchar("id", { length: 191 })
-    .primaryKey()
-    .$defaultFn(() => nanoid()),
-  collectionId: varchar("collection_id", { length: 256 })
-    .references(() => collections.id, { onDelete: "cascade" })
-    .notNull(),
-  productId: varchar("product_id", { length: 256 })
-    .references(() => products.id, { onDelete: "cascade" })
-    .notNull(),
-  userId: varchar("user_id", { length: 256 })
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-  createdAt: timestamp("created_at")
-    .notNull()
-    .default(sql`now()`),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .default(sql`now()`),
-});
+export const collectionProducts = pgTable(
+  "collection_products",
+  {
+    id: varchar("id", { length: 191 })
+      .primaryKey()
+      .$defaultFn(() => nanoid()),
+    collectionId: varchar("collection_id", { length: 256 })
+      .references(() => collections.id, { onDelete: "cascade" })
+      .notNull(),
+    productId: varchar("product_id", { length: 256 })
+      .references(() => products.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: varchar("user_id", { length: 256 })
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    createdAt: timestamp("created_at")
+      .notNull()
+      .default(sql`now()`),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .default(sql`now()`),
+  },
+  (t) => ({
+    unq: unique().on(t.productId, t.collectionId),
+  }),
+);
 
 // Schema for collectionProducts - used to validate API requests
 const baseSchema = createSelectSchema(collectionProducts).omit(timestamps);

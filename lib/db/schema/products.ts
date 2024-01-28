@@ -4,7 +4,10 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { shops } from "./shops";
 import { users } from "@/lib/db/schema/auth";
-import { type getProducts } from "@/lib/api/products/queries";
+import {
+  getProductsByShopId,
+  type getProducts,
+} from "@/lib/api/products/queries";
 
 import { nanoid, timestamps } from "@/lib/utils";
 
@@ -70,5 +73,5 @@ export type ProductShopId = z.infer<typeof productShopIdSchema>["shopId"];
 
 // this type infers the return from getProducts() - meaning it will include any joins
 export type CompleteProduct = Awaited<
-  ReturnType<typeof getProducts>
+  ReturnType<typeof getProductsByShopId>
 >["products"][number];

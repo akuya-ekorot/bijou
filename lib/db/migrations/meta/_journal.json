@@ -43,6 +43,13 @@
       "when": 1706463243699,
       "tag": "0005_lumpy_silver_fox",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1706465585999,
+      "tag": "0006_thin_magik",
+      "breakpoints": true
     }
   ]
 }

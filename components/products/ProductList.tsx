@@ -83,13 +83,20 @@ const Product = ({
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
+        "flex justify-between items-center my-2",
         mutating ? "opacity-30 animate-pulse" : "",
         deleting ? "text-destructive" : "",
       )}
     >
       <div className="w-full">
         <div>{product.product.name}</div>
+      </div>
+      <div className="w-full">
+        <div className="space-x-2 text-sm">
+          {product.collections.map((c) => (
+            <span>{c.name}</span>
+          ))}
+        </div>
       </div>
       <Button variant={"link"} asChild>
         <Link href={"/products/" + product.product.id}>Edit</Link>

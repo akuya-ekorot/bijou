@@ -7,8 +7,11 @@ import {
   products,
   ProductShopId,
   productShopIdSchema,
+  Product,
 } from "@/lib/db/schema/products";
-import { shops } from "@/lib/db/schema/shops";
+import { Shop, shops } from "@/lib/db/schema/shops";
+import { Collection, collections } from "@/lib/db/schema/collections";
+import { collectionProducts } from "@/lib/db/schema/collectionProducts";
 
 export const getProducts = async () => {
   const { session } = await getUserAuth();
@@ -38,7 +41,7 @@ export const getProductsByShopId = async (shopId: ProductShopId) => {
   const { shopId: productShopId } = productShopIdSchema.parse({ shopId });
 
   const p = await db
-    .select({ product: products, shop: shops })
+    .select({ product: products, shop: shops, collection: collections })
     .from(products)
     .where(
       and(
@@ -46,6 +49,31 @@ export const getProductsByShopId = async (shopId: ProductShopId) => {
         eq(products.userId, session?.user.id!),
       ),
     )
-    .leftJoin(shops, eq(products.shopId, shops.id));
-  return { products: p };
+    .leftJoin(shops, eq(products.shopId, shops.id))
+    .leftJoin(collectionProducts, eq(products.id, collectionProducts.productId))
+    .leftJoin(collections, eq(collectionProducts.collectionId, collections.id));
+
+  const pp = new Map();
+
+  for (const { product, shop, collection } of p) {
+    const existingProduct = pp.get(product.id);
+
+    if (existingProduct) {
+      existingProduct.collections.push(collection);
+    } else {
+      pp.set(product.id, {
+        product,
+        shop,
+        collections: collection ? [collection] : [],
+      });
+    }
+  }
+
+  return {
+    products: Array.from(pp.values()) as {
+      product: Product;
+      shop: Shop;
+      collections: Collection[];
+    }[],
+  };
 };
