@@ -1,13 +1,13 @@
 "use client";
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/shops/useOptimisticShops";
 import { type Shop } from "@/lib/db/schema/shops";
 import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import ShopForm from "@/components/shops/ShopForm";
+import { Button } from "@/components/ui/button";
+import { TAddOptimistic } from "../useOptimisticShops";
 
 export default function OptimisticShop({ shop }: { shop: Shop }) {
   const [open, setOpen] = useState(false);

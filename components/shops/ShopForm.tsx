@@ -1,27 +1,26 @@
 import { z } from "zod";
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/shops/useOptimisticShops";
+import { cn, type Action } from "@/lib/utils";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { type Shop, insertShopParams } from "@/lib/db/schema/shops";
+import { TAddOptimistic } from "@/app/useOptimisticShops";
 import {
   createShopAction,
   deleteShopAction,
   updateShopAction,
 } from "@/lib/actions/shops";
-import UploadImage from "../shared/upload-image";
-import { supabase } from "@/lib/supabase/client";
 import { upload } from "@/lib/api/upload";
+import { insertShopParams, type Shop } from "@/lib/db/schema/shops";
+import UploadImage from "../shared/upload-image";
 
 const ShopForm = ({
   shop,
