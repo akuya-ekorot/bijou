@@ -53,6 +53,7 @@ export const updateCollectionParams = baseSchema
     userId: true,
   });
 export const collectionIdSchema = baseSchema.pick({ id: true });
+export const collectionShopIdSchema = baseSchema.pick({ shopId: true });
 
 // Types for collections - used to type API request params and within Components
 export type Collection = typeof collections.$inferSelect;
@@ -60,6 +61,7 @@ export type NewCollection = z.infer<typeof insertCollectionSchema>;
 export type NewCollectionParams = z.infer<typeof insertCollectionParams>;
 export type UpdateCollectionParams = z.infer<typeof updateCollectionParams>;
 export type CollectionId = z.infer<typeof collectionIdSchema>["id"];
+export type CollectionShopId = z.infer<typeof collectionShopIdSchema>["shopId"];
 
 // this type infers the return from getCollections() - meaning it will include any joins
 export type CompleteCollection = Awaited<
