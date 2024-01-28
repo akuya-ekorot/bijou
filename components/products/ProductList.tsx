@@ -16,14 +16,14 @@ type TOpenModal = (product?: Product) => void;
 
 export default function ProductList({
   products,
-  shops,
+  shop,
 }: {
   products: CompleteProduct[];
-  shops: Shop[];
+  shop: Shop;
 }) {
   const { optimisticProducts, addOptimisticProduct } = useOptimisticProducts(
     products,
-    shops,
+    shop,
   );
   const [open, setOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
@@ -45,7 +45,7 @@ export default function ProductList({
           addOptimistic={addOptimisticProduct}
           openModal={openModal}
           closeModal={closeModal}
-          shops={shops}
+          shop={shop}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">

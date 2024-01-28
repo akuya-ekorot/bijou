@@ -1,36 +1,28 @@
 import { z } from "zod";
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/products/useOptimisticProducts";
+import { cn, type Action } from "@/lib/utils";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { type Product, insertProductParams } from "@/lib/db/schema/products";
+import { TAddOptimistic } from "@/app/[shopSlug]/products/useOptimisticProducts";
 import {
   createProductAction,
   deleteProductAction,
   updateProductAction,
 } from "@/lib/actions/products";
+import { insertProductParams, type Product } from "@/lib/db/schema/products";
 import { type Shop } from "@/lib/db/schema/shops";
 
 const ProductForm = ({
-  shops,
+  shop,
   product,
   openModal,
   closeModal,
@@ -38,7 +30,7 @@ const ProductForm = ({
   postSuccess,
 }: {
   product?: Product | null;
-  shops: Shop[];
+  shop: Shop;
   openModal?: (product?: Product) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -48,7 +40,7 @@ const ProductForm = ({
     useValidatedForm<Product>(insertProductParams);
   const { toast } = useToast();
   const editing = !!product?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -73,11 +65,14 @@ const ProductForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (shopId: string, data: FormData) => {
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const productParsed = await insertProductParams.safeParseAsync(payload);
+    const productParsed = await insertProductParams.safeParseAsync({
+      ...payload,
+      shopId,
+    });
     if (!productParsed.success) {
       setErrors(productParsed?.error.flatten().fieldErrors);
       return;
@@ -85,6 +80,7 @@ const ProductForm = ({
 
     closeModal && closeModal();
     const values = productParsed.data;
+
     const pendingProduct: Product = {
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
@@ -94,10 +90,11 @@ const ProductForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingProduct,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingProduct,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updateProductAction({ ...values, id: product.id })
@@ -105,7 +102,7 @@ const ProductForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingProduct 
+          values: pendingProduct,
         };
         onSuccess(
           editing ? "update" : "create",
@@ -119,10 +116,16 @@ const ProductForm = ({
     }
   };
 
+  const handleSubmitWithShopId = handleSubmit.bind(null, shop.id);
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form
+      action={handleSubmitWithShopId}
+      onChange={handleChange}
+      className={"space-y-8"}
+    >
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -143,7 +146,7 @@ const ProductForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -164,7 +167,7 @@ const ProductForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -180,41 +183,14 @@ const ProductForm = ({
           defaultValue={product?.description ?? ""}
         />
         {errors?.description ? (
-          <p className="text-xs text-destructive mt-2">{errors.description[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.description[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
       </div>
 
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.shopId ? "text-destructive" : "",
-          )}
-        >
-          Shop
-        </Label>
-        <Select defaultValue={product?.shopId} name="shopId">
-          <SelectTrigger
-            className={cn(errors?.shopId ? "ring ring-destructive" : "")}
-          >
-            <SelectValue placeholder="Select a shop" />
-          </SelectTrigger>
-          <SelectContent>
-          {shops?.map((shop) => (
-            <SelectItem key={shop.id} value={shop.id.toString()}>
-              {shop.id}{/* TODO: Replace with a field from the shop model */}
-            </SelectItem>
-           ))}
-          </SelectContent>
-        </Select>
-        {errors?.shopId ? (
-          <p className="text-xs text-destructive mt-2">{errors.shopId[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
       {/* Schema fields end */}
 
       {/* Save Button */}
@@ -230,7 +206,8 @@ const ProductForm = ({
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: product });
+              addOptimistic &&
+                addOptimistic({ action: "delete", data: product });
               const error = await deleteProductAction(product.id);
               setIsDeleting(false);
               const errorFormatted = {

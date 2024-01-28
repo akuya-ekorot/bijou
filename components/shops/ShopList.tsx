@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { type Shop, CompleteShop } from "@/lib/db/schema/shops";
 import Modal from "@/components/shared/Modal";
+import { CompleteShop, type Shop } from "@/lib/db/schema/shops";
+import { cn } from "@/lib/utils";
 
-import { useOptimisticShops } from "@/app/shops/useOptimisticShops";
+import { useOptimisticShops } from "@/app/useOptimisticShops";
 import { Button } from "@/components/ui/button";
-import ShopForm from "./ShopForm";
 import { PlusIcon } from "lucide-react";
+import ShopForm from "./ShopForm";
 
 type TOpenModal = (shop?: Shop) => void;
 

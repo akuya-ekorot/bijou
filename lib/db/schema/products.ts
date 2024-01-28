@@ -58,6 +58,7 @@ export const updateProductParams = baseSchema
     userId: true,
   });
 export const productIdSchema = baseSchema.pick({ id: true });
+export const productShopIdSchema = baseSchema.pick({ shopId: true });
 
 // Types for products - used to type API request params and within Components
 export type Product = typeof products.$inferSelect;
@@ -65,6 +66,7 @@ export type NewProduct = z.infer<typeof insertProductSchema>;
 export type NewProductParams = z.infer<typeof insertProductParams>;
 export type UpdateProductParams = z.infer<typeof updateProductParams>;
 export type ProductId = z.infer<typeof productIdSchema>["id"];
+export type ProductShopId = z.infer<typeof productShopIdSchema>["shopId"];
 
 // this type infers the return from getProducts() - meaning it will include any joins
 export type CompleteProduct = Awaited<

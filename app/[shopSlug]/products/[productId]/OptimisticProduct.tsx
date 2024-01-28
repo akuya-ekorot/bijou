@@ -1,22 +1,22 @@
 "use client";
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/products/useOptimisticProducts";
 import { type Product } from "@/lib/db/schema/products";
 import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
 import ProductForm from "@/components/products/ProductForm";
+import Modal from "@/components/shared/Modal";
+import { Button } from "@/components/ui/button";
 import { type Shop } from "@/lib/db/schema/shops";
+import { TAddOptimistic } from "../useOptimisticProducts";
 
-export default function OptimisticProduct({ 
+export default function OptimisticProduct({
   product,
-  shops 
-}: { 
-  product: Product; 
-  
-  shops: Shop[]
+  shop,
+}: {
+  product: Product;
+
+  shop: Shop;
 }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Product) => {
@@ -32,7 +32,7 @@ export default function OptimisticProduct({
       <Modal open={open} setOpen={setOpen}>
         <ProductForm
           product={product}
-          shops={shops}
+          shop={shop}
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateProduct}

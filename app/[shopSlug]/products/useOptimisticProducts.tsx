@@ -7,7 +7,7 @@ export type TAddOptimistic = (action: OptimisticAction<Product>) => void;
 
 export const useOptimisticProducts = (
   products: CompleteProduct[],
-  shops: Shop[],
+  shop: Shop,
 ) => {
   const [optimisticProducts, addOptimisticProduct] = useOptimistic(
     products,
@@ -17,7 +17,7 @@ export const useOptimisticProducts = (
     ): CompleteProduct[] => {
       const { data } = action;
 
-      const optimisticShop = shops.find((shop) => shop.id === data.shopId)!;
+      const optimisticShop = shop;
 
       const optimisticProduct = {
         product: { ...data, id: "optimistic" },
