@@ -19,6 +19,9 @@ import {
   deleteShopAction,
   updateShopAction,
 } from "@/lib/actions/shops";
+import UploadImage from "../shared/upload-image";
+import { supabase } from "@/lib/supabase/client";
+import { upload } from "@/lib/api/upload";
 
 const ShopForm = ({
   shop,
@@ -44,6 +47,8 @@ const ShopForm = ({
 
   const router = useRouter();
 
+  const [images, setImages] = useState<FileList>();
+
   const onSuccess = (
     action: Action,
     data?: { error: string; values: Shop },
@@ -63,11 +68,32 @@ const ShopForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (images: FileList | undefined, data: FormData) => {
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const shopParsed = await insertShopParams.safeParseAsync(payload);
+    let logoUrl = shop?.logoUrl ?? "";
+
+    if (images) {
+      const { data: uploadData, error } = await upload(images);
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: JSON.stringify(error),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      logoUrl = uploadData.urls[0];
+    }
+
+    const shopParsed = await insertShopParams.safeParseAsync({
+      ...payload,
+      logoUrl,
+    });
+
     if (!shopParsed.success) {
       setErrors(shopParsed?.error.flatten().fieldErrors);
       return;
@@ -110,8 +136,14 @@ const ShopForm = ({
     }
   };
 
+  const handleSubmitWithImages = handleSubmit.bind(null, images);
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-4"}>
+    <form
+      action={handleSubmitWithImages}
+      onChange={handleChange}
+      className={"space-y-4"}
+    >
       {/* Schema fields start */}
       <div>
         <Label
@@ -158,14 +190,9 @@ const ShopForm = ({
             errors?.logoUrl ? "text-destructive" : "",
           )}
         >
-          Logo Url
+          Logo
         </Label>
-        <Input
-          type="text"
-          name="logoUrl"
-          className={cn(errors?.logoUrl ? "ring ring-destructive" : "")}
-          defaultValue={shop?.logoUrl ?? ""}
-        />
+        <UploadImage setImages={setImages} />
         {errors?.logoUrl && (
           <p className="text-xs text-destructive mt-2">{errors.logoUrl[0]}</p>
         )}
