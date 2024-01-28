@@ -7,7 +7,7 @@ export default async function Home() {
   const { shops } = await getShops();
 
   if (!session) {
-    redirect("/auth/signin");
+    redirect("/auth");
   }
 
   if (!shops.length) {
