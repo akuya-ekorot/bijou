@@ -12,13 +12,13 @@ export default async function ShopsPage() {
 
   return (
     <main>
-      <div className="relative flex flex-col items-center">
+      <div className="relative flex flex-col items-center pt-24">
         <div className="flex justify-between">
           <h1 className="font-semibold text-2xl my-2">
             {hasShops ? "Pick shop" : "Create shops"}
           </h1>
         </div>
-        <div className="w-full max-w-xl min-h-">
+        <div className="w-full max-w-xl">
           {hasShops ? <Shops /> : <CreateShop />}
         </div>
       </div>
