@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
 export default function Modal({
   title,
@@ -17,13 +12,13 @@ export default function Modal({
   children: React.ReactNode;
 }) {
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
-      <DialogContent>
-        <DialogHeader className="px-5 pt-5">
-          <DialogTitle>{title ?? "Modal"}</DialogTitle>
-        </DialogHeader>
+    <Sheet onOpenChange={setOpen} open={open}>
+      <SheetContent>
+        <SheetHeader className="px-5 pt-5">
+          <SheetTitle>{title ?? "Modal"}</SheetTitle>
+        </SheetHeader>
         <div className="px-5 pb-5">{children}</div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
