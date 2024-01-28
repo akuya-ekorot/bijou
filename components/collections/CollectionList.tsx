@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { useOptimisticCollections } from "@/app/collections/useOptimisticCollections";
+import { useOptimisticCollections } from "@/app/[shopSlug]/collections/useOptimisticCollections";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import {
