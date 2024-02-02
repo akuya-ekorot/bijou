@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 import { getShopBySlug } from "@/lib/api/shops/queries";
 import { checkAuth } from "@/lib/auth/utils";
-import OptimisticShop from "./OptimisticShop";
+import OptimisticShop from "../../components/shops/OptimisticShop";
 
 import Loading from "@/app/loading";
 
