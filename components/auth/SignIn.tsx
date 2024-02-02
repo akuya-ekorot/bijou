@@ -1,4 +1,5 @@
 "use client";
+
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,9 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Input } from "../ui/input";
+import { useState } from "react";
 
 export default function SignIn() {
   const { data: session, status } = useSession();
+  const [email, setEmail] = useState("");
 
   if (status === "loading") return <div>Loading...</div>;
 
@@ -27,25 +31,32 @@ export default function SignIn() {
       </div>
     );
   }
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center pt-16 gap-3">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign in</CardTitle>
-          <CardDescription>
-            Sign in with Google below to continue
-          </CardDescription>
+          <CardDescription>Sign in with your email to continue</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-2">
+          <Input
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            required
+            name="email"
+            autoComplete="email"
+          />
           <Button
             className="w-full"
             onClick={() =>
-              signIn("google", {
+              signIn("email", {
+                email,
                 callbackUrl: "/",
               })
             }
           >
-            Continue with Google
+            Continue with Email
           </Button>
         </CardContent>
       </Card>

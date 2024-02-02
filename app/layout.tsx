@@ -1,5 +1,3 @@
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import NextAuthProvider from "@/lib/auth/Provider";

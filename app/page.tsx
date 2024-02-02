@@ -7,6 +7,8 @@ import CreateShop from "@/components/shops/CreteShop";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function ShopsPage() {
+  await checkAuth();
+
   const { shops } = await getShops();
   const hasShops = shops.length > 0;
 
@@ -27,8 +29,6 @@ export default async function ShopsPage() {
 }
 
 const Shops = async () => {
-  await checkAuth();
-
   const { shops } = await getShops();
 
   return (

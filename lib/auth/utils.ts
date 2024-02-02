@@ -5,6 +5,7 @@ import Google from "next-auth/providers/google";
 import { redirect } from "next/navigation";
 import { db } from "../db";
 import { env } from "../env.mjs";
+import Email from "next-auth/providers/email";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -17,9 +18,9 @@ declare module "next-auth" {
 const adapter = DrizzleAdapter(db) as Adapter;
 
 const providers = [
-  Google({
-    clientId: env.GOOGLE_CLIENT_ID,
-    clientSecret: env.GOOGLE_CLIENT_SECRET,
+  Email({
+    from: env.EMAIL_FROM,
+    server: env.EMAIL_SERVER,
   }),
 ];
 
