@@ -64,6 +64,13 @@
       "when": 1707069196770,
       "tag": "0008_tiny_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1707069306168,
+      "tag": "0009_sturdy_stranger",
+      "breakpoints": true
     }
   ]
 }
