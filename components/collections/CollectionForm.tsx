@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
 
@@ -22,6 +22,7 @@ import {
   deleteCollectionAction,
   updateCollectionAction,
 } from "@/lib/actions/collections";
+import { getShopBySlug } from "@/lib/api/shops/queries";
 
 const CollectionForm = ({
   collection,
@@ -44,6 +45,7 @@ const CollectionForm = ({
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
+  const params = useParams();
 
   const router = useRouter();
 
@@ -70,8 +72,14 @@ const CollectionForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const collectionParsed =
-      await insertCollectionParams.safeParseAsync(payload);
+
+    const { shop } = await getShopBySlug(params.shopSlug as string);
+
+    const collectionParsed = await insertCollectionParams.safeParseAsync({
+      ...payload,
+      shopId: shop.id,
+    });
+
     if (!collectionParsed.success) {
       setErrors(collectionParsed?.error.flatten().fieldErrors);
       return;

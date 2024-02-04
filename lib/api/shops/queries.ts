@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/db/index";
 import { eq, and } from "drizzle-orm";
 import { getUserAuth } from "@/lib/auth/utils";
