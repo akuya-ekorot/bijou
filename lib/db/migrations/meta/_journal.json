@@ -57,6 +57,13 @@
       "when": 1707015529377,
       "tag": "0007_dear_microchip",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1707069196770,
+      "tag": "0008_tiny_champions",
+      "breakpoints": true
     }
   ]
 }
