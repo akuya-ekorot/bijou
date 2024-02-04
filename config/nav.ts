@@ -1,5 +1,5 @@
 import { SidebarLink } from "@/components/SidebarItems";
-import { Cog, Globe, HomeIcon, LibraryBig, Tags } from "lucide-react";
+import { Cog, Globe, HomeIcon, Image, LibraryBig, Tags } from "lucide-react";
 
 type AdditionalLinks = {
   title?: string;
@@ -14,6 +14,7 @@ export const defaultLinks: SidebarLink[] = [
 
 export const additionalLinks: AdditionalLinks[] = [
   {
-    links: [],
+    title: "Entities",
+    links: [{ href: "/images", title: "Images", icon: Image }],
   },
 ];
