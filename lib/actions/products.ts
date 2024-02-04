@@ -30,20 +30,22 @@ const revalidateProducts = () => revalidatePath("/products");
 export const createProductAction = async (input: NewProductParams) => {
   try {
     const payload = insertProductParams.parse(input);
-    await createProduct(payload);
+    const product = await createProduct(payload);
     revalidateProducts();
+    return { product, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { product: null, error: handleErrors(e) };
   }
 };
 
 export const updateProductAction = async (input: UpdateProductParams) => {
   try {
     const payload = updateProductParams.parse(input);
-    await updateProduct(payload.id, payload);
+    const product = await updateProduct(payload.id, payload);
     revalidateProducts();
+    return { product, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { product: null, error: handleErrors(e) };
   }
 };
 
@@ -56,3 +58,4 @@ export const deleteProductAction = async (input: ProductId) => {
     return handleErrors(e);
   }
 };
+

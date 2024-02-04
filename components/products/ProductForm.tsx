@@ -19,6 +19,10 @@ import {
   deleteProductAction,
   updateProductAction,
 } from "@/lib/actions/products";
+import { upload } from "@/lib/api/upload";
+import { insertMultipleImagesParams } from "@/lib/db/schema/images";
+import { createImageAction } from "@/lib/actions/images";
+import { createProductImageAction } from "@/lib/actions/productImages";
 
 const ProductForm = ({
   product,
@@ -34,8 +38,9 @@ const ProductForm = ({
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
-  const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Product>(insertProductParams);
+  const { errors, hasErrors, setErrors, handleChange } = useValidatedForm<
+    Product & { images: FileList | null }
+  >(insertProductParams);
   const { toast } = useToast();
   const editing = !!product?.id;
 
@@ -63,8 +68,44 @@ const ProductForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (
+    { images }: { images: FileList | null },
+    data: FormData,
+  ) => {
     setErrors(null);
+
+    const imageIds: Array<{ id: string }> = [];
+
+    //TODO: upload image if not null
+    if (images) {
+      const { data: uploadData, error: uploadError } = await upload(images);
+
+      if (uploadError || !uploadData) {
+        setErrors({ images: [uploadError ?? "error uploading images"] });
+        return;
+      }
+
+      const imageParsed = await insertMultipleImagesParams.safeParseAsync(
+        uploadData.urls,
+      );
+
+      if (!imageParsed.success) {
+        console.log(imageParsed.error);
+        setErrors({ images: ["Error parsing image data"] });
+        return;
+      }
+
+      for (const parsedImage of imageParsed.data) {
+        const { error, image } = await createImageAction(parsedImage);
+
+        if (error || !image) {
+          setErrors({ images: [error ?? "Error creating image records"] });
+          return;
+        }
+
+        imageIds.push({ id: image.image.id });
+      }
+    }
 
     const payload = Object.fromEntries(data.entries());
     const productParsed = await insertProductParams.safeParseAsync(payload);
@@ -75,6 +116,13 @@ const ProductForm = ({
 
     closeModal && closeModal();
     const values = productParsed.data;
+    const pendingImages = imageIds.map((image) => ({
+      ...image,
+      url: "",
+      userId: product?.userId ?? "",
+      updatedAt: product?.updatedAt ?? new Date(),
+      createdAt: product?.createdAt ?? new Date(),
+    }));
     const pendingProduct: Product = {
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
@@ -90,7 +138,7 @@ const ProductForm = ({
             action: editing ? "update" : "create",
           });
 
-        const error = editing
+        const { product: newProduct, error } = editing
           ? await updateProductAction({ ...values, id: product.id })
           : await createProductAction(values);
 
@@ -98,6 +146,33 @@ const ProductForm = ({
           error: error ?? "Error",
           values: pendingProduct,
         };
+
+        if (error || !newProduct) {
+          onSuccess(
+            editing ? "update" : "create",
+            error ? errorFormatted : undefined,
+          );
+          return;
+        }
+
+        let order = 0;
+
+        //TODO: create collection image record
+        for (const imageId of imageIds) {
+          const imageError = await createProductImageAction({
+            productId: newProduct.product.id,
+            imageId: imageId.id,
+            order,
+          });
+
+          if (imageError) {
+            setErrors({ images: [imageError] });
+            return;
+          }
+
+          order++;
+        }
+
         onSuccess(
           editing ? "update" : "create",
           error ? errorFormatted : undefined,
@@ -110,8 +185,15 @@ const ProductForm = ({
     }
   };
 
+  const [images, setImages] = useState<FileList | null>(null);
+
+  const handleSubmitWrapper = handleSubmit.bind(null, { images });
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form
+      action={handleSubmitWrapper}
+      onChange={handleChange}
+      className={"space-y-8"}
+    >
       {/* Schema fields start */}
       <div>
         <Label
@@ -199,6 +281,32 @@ const ProductForm = ({
           <div className="h-6" />
         )}
       </div>
+
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.images ? "text-destructive" : "",
+          )}
+        >
+          Images
+        </Label>
+        <Input
+          type="file"
+          multiple
+          name="images"
+          className={cn(errors?.images ? "ring ring-destructive" : "")}
+          onChange={(e) => {
+            setImages(e.target.files);
+          }}
+        />
+        {errors?.images ? (
+          <p className="text-xs text-destructive mt-2">{errors.images[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+
       {/* Schema fields end */}
 
       {/* Save Button */}

@@ -1,3 +1,4 @@
+import { ScrollArea } from "../ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
 export default function Modal({
@@ -17,7 +18,9 @@ export default function Modal({
         <SheetHeader className="px-5 pt-5">
           <SheetTitle>{title ?? "Modal"}</SheetTitle>
         </SheetHeader>
-        <div className="px-5 pb-5">{children}</div>
+        <ScrollArea className="h-[512px]">
+          <div className="px-5 pb-5">{children}</div>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
