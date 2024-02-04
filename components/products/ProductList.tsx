@@ -11,6 +11,8 @@ import { useOptimisticProducts } from "@/app/[shopSlug]/products/useOptimisticPr
 import { Button } from "@/components/ui/button";
 import ProductForm from "./ProductForm";
 import { PlusIcon } from "lucide-react";
+import { DataTable } from "../shared/data-table";
+import { columns } from "./columns";
 
 type TOpenModal = (product?: Product) => void;
 
@@ -51,11 +53,7 @@ export default function ProductList({
       {optimisticProducts.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <ul>
-          {optimisticProducts.map((product) => (
-            <Product product={product} key={product.id} openModal={openModal} />
-          ))}
-        </ul>
+        <DataTable columns={columns} data={optimisticProducts} />
       )}
     </div>
   );

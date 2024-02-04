@@ -29,6 +29,7 @@
     "@supabase/ssr": "^0.0.10",
     "@t3-oss/env-nextjs": "^0.8.0",
     "@tanstack/react-query": "^4.32.6",
+    "@tanstack/react-table": "^8.11.8",
     "@trpc/client": "^10.37.1",
     "@trpc/next": "^10.37.1",
     "@trpc/react-query": "^10.37.1",
