@@ -5,7 +5,7 @@ import { checkAuth } from "@/lib/auth/utils";
 
 export default async function Images() {
   await checkAuth();
-  const { images } = await api.images.getImages.query();  
+  const { images } = await api.images.getImages.query();
 
   return (
     <main>

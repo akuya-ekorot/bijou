@@ -5,15 +5,21 @@ import {
   insertImageParams,
   updateImageParams,
 } from "@/lib/db/schema/images";
-import { createImage, deleteImage, updateImage } from "@/lib/api/images/mutations";
+import {
+  createImage,
+  deleteImage,
+  updateImage,
+} from "@/lib/api/images/mutations";
 
 export const imagesRouter = router({
   getImages: publicProcedure.query(async () => {
     return getImages();
   }),
-  getImageById: publicProcedure.input(imageIdSchema).query(async ({ input }) => {
-    return getImageById(input.id);
-  }),
+  getImageById: publicProcedure
+    .input(imageIdSchema)
+    .query(async ({ input }) => {
+      return getImageById(input.id);
+    }),
   createImage: publicProcedure
     .input(insertImageParams)
     .mutation(async ({ input }) => {

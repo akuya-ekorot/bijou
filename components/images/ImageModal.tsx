@@ -3,29 +3,30 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 import ImageForm from "./ImageForm";
 import { Image } from "@/lib/db/schema/images";
 
-export default function ImageModal({ 
+export default function ImageModal({
   image,
   emptyState,
-}: { 
+}: {
   image?: Image;
   emptyState?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const editing = !!image?.id;
+
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
-      <DialogTrigger asChild>
-      { emptyState ? (
+    <Sheet onOpenChange={setOpen} open={open}>
+      <SheetTrigger asChild>
+        {emptyState ? (
           <Button>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -45,21 +46,22 @@ export default function ImageModal({
             New Image
           </Button>
         ) : (
-        <Button
-          variant={editing ? "ghost" : "outline"}
-          size={editing ? "sm" : "icon"}
-        >
-          {editing ? "Edit" : "+"}
-        </Button> )}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="px-5 pt-5">
-          <DialogTitle>{ editing ? "Edit" : "Create" } Image</DialogTitle>
-        </DialogHeader>
+          <Button
+            variant={editing ? "ghost" : "outline"}
+            size={editing ? "sm" : "icon"}
+          >
+            {editing ? "Edit" : "+"}
+          </Button>
+        )}
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader className="px-5 pt-5">
+          <SheetTitle>{editing ? "Edit" : "Create"} Image</SheetTitle>
+        </SheetHeader>
         <div className="px-5 pb-5">
           <ImageForm closeModal={closeModal} image={image} />
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

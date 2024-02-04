@@ -1,6 +1,10 @@
 "use client";
 
-import { Image, NewImageParams, insertImageParams } from "@/lib/db/schema/images";
+import {
+  Image,
+  NewImageParams,
+  insertImageParams,
+} from "@/lib/db/schema/images";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -27,7 +31,7 @@ const ImageForm = ({
   closeModal?: () => void;
 }) => {
   const { toast } = useToast();
-  
+
   const editing = !!image?.id;
 
   const router = useRouter();
@@ -39,14 +43,15 @@ const ImageForm = ({
     // errors locally but not in production
     resolver: zodResolver(insertImageParams),
     defaultValues: image ?? {
-      url: ""
+      url: "",
     },
   });
 
-  const onSuccess = async (action: "create" | "update" | "delete",
+  const onSuccess = async (
+    action: "create" | "update" | "delete",
     data?: { error?: string },
   ) => {
-        if (data?.error) {
+    if (data?.error) {
       toast({
         title: `${action
           .slice(0, 1)
@@ -61,8 +66,8 @@ const ImageForm = ({
     await utils.images.getImages.invalidate();
     router.refresh();
     if (closeModal) closeModal();
-        toast({
-      title: 'Success',
+    toast({
+      title: "Success",
       description: `Image ${action}d!`,
       variant: "default",
     });
@@ -96,11 +101,12 @@ const ImageForm = ({
         <FormField
           control={form.control}
           name="url"
-          render={({ field }) => (<FormItem>
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Url</FormLabel>
-                <FormControl>
-            <Input {...field} />
-          </FormControl>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
 
               <FormMessage />
             </FormItem>
