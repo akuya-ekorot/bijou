@@ -7,12 +7,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
 
 import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/images/useOptimisticImages";
+import { type TAddOptimistic } from "@/app/[shopSlug]/images/useOptimisticImages";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
 
 import { type Image, insertImageParams } from "@/lib/db/schema/images";
 import {
@@ -20,10 +19,9 @@ import {
   deleteImageAction,
   updateImageAction,
 } from "@/lib/actions/images";
-
+import { supabase } from "@/lib/supabase/client";
 
 const ImageForm = ({
-  
   image,
   openModal,
   closeModal,
@@ -31,7 +29,7 @@ const ImageForm = ({
   postSuccess,
 }: {
   image?: Image | null;
-  
+
   openModal?: (image?: Image) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -39,9 +37,10 @@ const ImageForm = ({
 }) => {
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Image>(insertImageParams);
+
   const { toast } = useToast();
   const editing = !!image?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -70,7 +69,25 @@ const ImageForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const imageParsed = await insertImageParams.safeParseAsync(payload);
+
+    // upload image
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("images")
+      .upload(`public/images/${Date.now()}`, payload.url);
+
+    if (uploadError) {
+      setErrors({ url: [uploadError.message] });
+      return;
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("images").getPublicUrl(uploadData.path);
+
+    const imageParsed = await insertImageParams.safeParseAsync({
+      url: publicUrl,
+    });
+
     if (!imageParsed.success) {
       setErrors(imageParsed?.error.flatten().fieldErrors);
       return;
@@ -87,10 +104,11 @@ const ImageForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingImage,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingImage,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updateImageAction({ ...values, id: image.id })
@@ -98,7 +116,7 @@ const ImageForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingImage 
+          values: pendingImage,
         };
         onSuccess(
           editing ? "update" : "create",
@@ -115,7 +133,7 @@ const ImageForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -125,7 +143,7 @@ const ImageForm = ({
           Url
         </Label>
         <Input
-          type="text"
+          type="file"
           name="url"
           className={cn(errors?.url ? "ring ring-destructive" : "")}
           defaultValue={image?.url ?? ""}

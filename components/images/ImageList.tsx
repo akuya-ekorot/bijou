@@ -7,24 +7,15 @@ import { cn } from "@/lib/utils";
 import { type Image, CompleteImage } from "@/lib/db/schema/images";
 import Modal from "@/components/shared/Modal";
 
-import { useOptimisticImages } from "@/app/images/useOptimisticImages";
+import { useOptimisticImages } from "@/app/[shopSlug]/images/useOptimisticImages";
 import { Button } from "@/components/ui/button";
 import ImageForm from "./ImageForm";
 import { PlusIcon } from "lucide-react";
 
 type TOpenModal = (image?: Image) => void;
 
-export default function ImageList({
-  images,
-   
-}: {
-  images: CompleteImage[];
-   
-}) {
-  const { optimisticImages, addOptimisticImage } = useOptimisticImages(
-    images,
-     
-  );
+export default function ImageList({ images }: { images: CompleteImage[] }) {
+  const { optimisticImages, addOptimisticImage } = useOptimisticImages(images);
   const [open, setOpen] = useState(false);
   const [activeImage, setActiveImage] = useState<Image | null>(null);
   const openModal = (image?: Image) => {
@@ -45,7 +36,6 @@ export default function ImageList({
           addOptimistic={addOptimisticImage}
           openModal={openModal}
           closeModal={closeModal}
-          
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -58,11 +48,7 @@ export default function ImageList({
       ) : (
         <ul>
           {optimisticImages.map((image) => (
-            <Image
-              image={image}
-              key={image.id}
-              openModal={openModal}
-            />
+            <Image image={image} key={image.id} openModal={openModal} />
           ))}
         </ul>
       )}
@@ -92,9 +78,7 @@ const Image = ({
         <div>{image.url}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/images/" + image.id }>
-          Edit
-        </Link>
+        <Link href={"/images/" + image.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -111,7 +95,8 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Images </Button>
+          <PlusIcon className="h-4" /> New Images{" "}
+        </Button>
       </div>
     </div>
   );
