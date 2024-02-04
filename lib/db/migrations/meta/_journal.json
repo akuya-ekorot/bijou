@@ -85,6 +85,13 @@
       "when": 1707071976837,
       "tag": "0011_quiet_unus",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1707072468695,
+      "tag": "0012_chilly_the_stranger",
+      "breakpoints": true
     }
   ]
 }
