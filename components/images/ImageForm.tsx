@@ -13,13 +13,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import { type Image, insertImageParams } from "@/lib/db/schema/images";
+import {
+  type TImage,
+  insertImageParams,
+  insertMultipleImagesParams,
+} from "@/lib/db/schema/images";
 import {
   createImageAction,
   deleteImageAction,
   updateImageAction,
 } from "@/lib/actions/images";
 import { supabase } from "@/lib/supabase/client";
+import { upload } from "@/lib/api/upload";
 
 const ImageForm = ({
   image,
@@ -28,15 +33,15 @@ const ImageForm = ({
   addOptimistic,
   postSuccess,
 }: {
-  image?: Image | null;
+  image?: TImage | null;
 
-  openModal?: (image?: Image) => void;
+  openModal?: (image?: TImage) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
   const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Image>(insertImageParams);
+    useValidatedForm<TImage>(insertImageParams);
 
   const { toast } = useToast();
   const editing = !!image?.id;
@@ -48,7 +53,7 @@ const ImageForm = ({
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Image },
+    data?: { error: string; values: TImage },
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -65,73 +70,87 @@ const ImageForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (
+    { images }: { images: FileList | null },
+    data: FormData,
+  ) => {
     setErrors(null);
 
-    const payload = Object.fromEntries(data.entries());
-
-    // upload image
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("images")
-      .upload(`public/images/${Date.now()}`, payload.url);
-
-    if (uploadError) {
-      setErrors({ url: [uploadError.message] });
+    if (!images) {
+      setErrors({ url: ["Image is required"] });
       return;
     }
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("images").getPublicUrl(uploadData.path);
+    // upload images
+    const { data: uploadData, error: uploadError } = await upload(images);
 
-    const imageParsed = await insertImageParams.safeParseAsync({
-      url: publicUrl,
-    });
+    if (uploadError || !uploadData) {
+      setErrors({ url: [uploadError ?? "error uploading images"] });
+      return;
+    }
+
+    const imageParsed = await insertMultipleImagesParams.safeParseAsync(
+      uploadData.urls,
+    );
 
     if (!imageParsed.success) {
-      setErrors(imageParsed?.error.flatten().fieldErrors);
+      console.log(imageParsed.error);
+      setErrors({ url: ["Error parsing image data"] });
       return;
     }
 
     closeModal && closeModal();
-    const values = imageParsed.data;
-    const pendingImage: Image = {
-      updatedAt: image?.updatedAt ?? new Date(),
-      createdAt: image?.createdAt ?? new Date(),
-      id: image?.id ?? "",
-      userId: image?.userId ?? "",
-      ...values,
-    };
-    try {
-      startMutation(async () => {
-        addOptimistic &&
-          addOptimistic({
-            data: pendingImage,
-            action: editing ? "update" : "create",
-          });
 
-        const error = editing
-          ? await updateImageAction({ ...values, id: image.id })
-          : await createImageAction(values);
+    for (const parsedImage of imageParsed.data) {
+      const values = parsedImage;
 
-        const errorFormatted = {
-          error: error ?? "Error",
-          values: pendingImage,
-        };
-        onSuccess(
-          editing ? "update" : "create",
-          error ? errorFormatted : undefined,
-        );
-      });
-    } catch (e) {
-      if (e instanceof z.ZodError) {
-        setErrors(e.flatten().fieldErrors);
+      const pendingImage: TImage = {
+        updatedAt: image?.updatedAt ?? new Date(),
+        createdAt: image?.createdAt ?? new Date(),
+        id: image?.id ?? "",
+        userId: image?.userId ?? "",
+        ...values,
+      };
+
+      try {
+        startMutation(async () => {
+          addOptimistic &&
+            addOptimistic({
+              data: pendingImage,
+              action: editing ? "update" : "create",
+            });
+
+          const { error } = editing
+            ? await updateImageAction({ ...values, id: image.id })
+            : await createImageAction(values);
+
+          const errorFormatted = {
+            error: error ?? "Error",
+            values: pendingImage,
+          };
+          onSuccess(
+            editing ? "update" : "create",
+            error ? errorFormatted : undefined,
+          );
+        });
+      } catch (e) {
+        if (e instanceof z.ZodError) {
+          setErrors(e.flatten().fieldErrors);
+        }
       }
     }
   };
 
+  const [images, setImages] = useState<FileList | null>(null);
+
+  const handleSubmitWrapper = handleSubmit.bind(null, { images });
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form
+      action={handleSubmitWrapper}
+      onChange={handleChange}
+      className={"space-y-8"}
+    >
       {/* Schema fields start */}
       <div>
         <Label
@@ -144,9 +163,13 @@ const ImageForm = ({
         </Label>
         <Input
           type="file"
+          multiple
           name="url"
           className={cn(errors?.url ? "ring ring-destructive" : "")}
           defaultValue={image?.url ?? ""}
+          onChange={(e) => {
+            setImages(e.target.files);
+          }}
         />
         {errors?.url ? (
           <p className="text-xs text-destructive mt-2">{errors.url[0]}</p>
