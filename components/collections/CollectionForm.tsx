@@ -128,6 +128,14 @@ const CollectionForm = ({
 
     closeModal && closeModal();
     const values = collectionParsed.data;
+    const pendingImages = imageIds.map((image) => ({
+      ...image,
+      url: "",
+      userId: collection?.userId ?? "",
+      updatedAt: collection?.updatedAt ?? new Date(),
+      createdAt: collection?.createdAt ?? new Date(),
+    }));
+
     const pendingCollection: Collection = {
       updatedAt: collection?.updatedAt ?? new Date(),
       createdAt: collection?.createdAt ?? new Date(),
@@ -139,7 +147,7 @@ const CollectionForm = ({
       startMutation(async () => {
         addOptimistic &&
           addOptimistic({
-            data: pendingCollection,
+            data: { ...pendingCollection, images: pendingImages },
             action: editing ? "update" : "create",
           });
 
@@ -287,7 +295,10 @@ const CollectionForm = ({
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
-                addOptimistic({ action: "delete", data: collection });
+                addOptimistic({
+                  action: "delete",
+                  data: { ...collection, images: [] },
+                });
               const error = await deleteCollectionAction(collection.id);
               setIsDeleting(false);
               const errorFormatted = {

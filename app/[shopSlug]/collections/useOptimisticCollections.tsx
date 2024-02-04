@@ -1,27 +1,26 @@
-
-import { type Collection, type CompleteCollection } from "@/lib/db/schema/collections";
+import {
+  type Collection,
+  type CompleteCollection,
+} from "@/lib/db/schema/collections";
+import { TImage } from "@/lib/db/schema/images";
 import { OptimisticAction } from "@/lib/utils";
 import { useOptimistic } from "react";
 
-export type TAddOptimistic = (action: OptimisticAction<Collection>) => void;
+export type TAddOptimistic = (
+  action: OptimisticAction<Collection & { images: TImage[] }>,
+) => void;
 
-export const useOptimisticCollections = (
-  collections: CompleteCollection[],
-  
-) => {
+export const useOptimisticCollections = (collections: CompleteCollection[]) => {
   const [optimisticCollections, addOptimisticCollection] = useOptimistic(
     collections,
     (
       currentState: CompleteCollection[],
-      action: OptimisticAction<Collection>,
+      action: OptimisticAction<Collection & { images: TImage[] }>,
     ): CompleteCollection[] => {
       const { data } = action;
 
-      
-
       const optimisticCollection = {
         ...data,
-        
         id: "optimistic",
       };
 
