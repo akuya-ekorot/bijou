@@ -21,11 +21,11 @@ const SidebarItems = ({ shopSlug }: { shopSlug: string }) => {
       {additionalLinks.length > 0
         ? additionalLinks.map((l) => (
             <SidebarLinkGroup
+              key={l.title}
               shopSlug={shopSlug}
               links={l.links}
               title={l.title}
               border
-              key={l.title}
             />
           ))
         : null}

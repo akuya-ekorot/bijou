@@ -14,17 +14,6 @@ export const defaultLinks: SidebarLink[] = [
 
 export const additionalLinks: AdditionalLinks[] = [
   {
-    links: [
-      {
-        href: "/collections",
-        title: "Collections",
-        icon: LibraryBig,
-      },
-      {
-        href: "/products",
-        title: "Products",
-        icon: Tags,
-      },
-    ],
+    links: [],
   },
 ];
