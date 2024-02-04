@@ -40,7 +40,7 @@ export const updateImageParams = baseSchema.extend({}).omit({
 export const imageIdSchema = baseSchema.pick({ id: true });
 
 // Types for images - used to type API request params and within Components
-export type Image = typeof images.$inferSelect;
+export type TImage = typeof images.$inferSelect;
 export type NewImage = z.infer<typeof insertImageSchema>;
 export type NewImageParams = z.infer<typeof insertImageParams>;
 export type UpdateImageParams = z.infer<typeof updateImageParams>;

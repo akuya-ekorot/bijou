@@ -2,16 +2,16 @@
 
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/[shopSlug]/images/useOptimisticImages";
-import { type Image } from "@/lib/db/schema/images";
+import { type TImage } from "@/lib/db/schema/images";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import ImageForm from "@/components/images/ImageForm";
 
-export default function OptimisticImage({ image }: { image: Image }) {
+export default function OptimisticImage({ image }: { image: TImage }) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Image) => {
+  const openModal = (_?: TImage) => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);

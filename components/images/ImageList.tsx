@@ -4,21 +4,23 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { type Image, CompleteImage } from "@/lib/db/schema/images";
+import { type TImage, CompleteImage } from "@/lib/db/schema/images";
 import Modal from "@/components/shared/Modal";
 
 import { useOptimisticImages } from "@/app/[shopSlug]/images/useOptimisticImages";
 import { Button } from "@/components/ui/button";
 import ImageForm from "./ImageForm";
 import { PlusIcon } from "lucide-react";
+import { useParams } from "next/navigation";
+import Image from "next/image";
 
-type TOpenModal = (image?: Image) => void;
+type TOpenModal = (image?: TImage) => void;
 
 export default function ImageList({ images }: { images: CompleteImage[] }) {
   const { optimisticImages, addOptimisticImage } = useOptimisticImages(images);
   const [open, setOpen] = useState(false);
-  const [activeImage, setActiveImage] = useState<Image | null>(null);
-  const openModal = (image?: Image) => {
+  const [activeImage, setActiveImage] = useState<TImage | null>(null);
+  const openModal = (image?: TImage) => {
     setOpen(true);
     image ? setActiveImage(image) : setActiveImage(null);
   };
@@ -47,16 +49,30 @@ export default function ImageList({ images }: { images: CompleteImage[] }) {
         <EmptyState openModal={openModal} />
       ) : (
         <ul>
-          {optimisticImages.map((image) => (
-            <Image image={image} key={image.id} openModal={openModal} />
-          ))}
+          <ImageGrid images={optimisticImages} openModal={openModal} />
         </ul>
       )}
     </div>
   );
 }
 
-const Image = ({
+const ImageGrid = ({
+  images,
+  openModal,
+}: {
+  images: CompleteImage[];
+  openModal: TOpenModal;
+}) => {
+  return (
+    <div className="grid grid-cols-4 gap-4">
+      {images.map((image) => (
+        <ImageItem image={image} key={image.id} openModal={openModal} />
+      ))}
+    </div>
+  );
+};
+
+const ImageItem = ({
   image,
   openModal,
 }: {
@@ -66,19 +82,27 @@ const Image = ({
   const optimistic = image.id === "optimistic";
   const deleting = image.id === "delete";
   const mutating = optimistic || deleting;
+  const params = useParams();
+
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
+        "flex flex-col",
         mutating ? "opacity-30 animate-pulse" : "",
         deleting ? "text-destructive" : "",
       )}
     >
       <div className="w-full">
-        <div>{image.url}</div>
+        <Image
+          className="w-full"
+          src={image.url}
+          alt={image.url}
+          height={280}
+          width={280}
+        />
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/images/" + image.id}>Edit</Link>
+        <Link href={`/${params.shopSlug}/images/` + image.id}>Edit</Link>
       </Button>
     </li>
   );

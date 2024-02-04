@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import { type Image, insertImageParams } from "@/lib/db/schema/images";
+import { type TImage, insertImageParams } from "@/lib/db/schema/images";
 import {
   createImageAction,
   deleteImageAction,
@@ -28,15 +28,15 @@ const ImageForm = ({
   addOptimistic,
   postSuccess,
 }: {
-  image?: Image | null;
+  image?: TImage | null;
 
-  openModal?: (image?: Image) => void;
+  openModal?: (image?: TImage) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
   const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Image>(insertImageParams);
+    useValidatedForm<TImage>(insertImageParams);
 
   const { toast } = useToast();
   const editing = !!image?.id;
@@ -48,7 +48,7 @@ const ImageForm = ({
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Image },
+    data?: { error: string; values: TImage },
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -95,7 +95,7 @@ const ImageForm = ({
 
     closeModal && closeModal();
     const values = imageParsed.data;
-    const pendingImage: Image = {
+    const pendingImage: TImage = {
       updatedAt: image?.updatedAt ?? new Date(),
       createdAt: image?.createdAt ?? new Date(),
       id: image?.id ?? "",
