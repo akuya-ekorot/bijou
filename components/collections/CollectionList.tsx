@@ -22,6 +22,7 @@ export default function CollectionList({
 }: {
   collections: CompleteCollection[];
 }) {
+  console.log("collections", collections);
   const { optimisticCollections, addOptimisticCollection } =
     useOptimisticCollections(collections);
   const [open, setOpen] = useState(false);
