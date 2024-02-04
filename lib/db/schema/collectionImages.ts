@@ -1,5 +1,11 @@
 import { sql } from "drizzle-orm";
-import { varchar, timestamp, pgTable } from "drizzle-orm/pg-core";
+import {
+  varchar,
+  timestamp,
+  pgTable,
+  integer,
+  serial,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { collections } from "./collections";
@@ -13,6 +19,7 @@ export const collectionImages = pgTable("collection_images", {
   id: varchar("id", { length: 191 })
     .primaryKey()
     .$defaultFn(() => nanoid()),
+  order: integer("order").notNull().default(0),
   collectionId: varchar("collection_id", { length: 256 })
     .references(() => collections.id, { onDelete: "cascade" })
     .notNull(),

@@ -32,6 +32,7 @@ export const insertImageParams = baseSchema.extend({}).omit({
   id: true,
   userId: true,
 });
+export const insertMultipleImagesParams = z.array(insertImageParams);
 
 export const updateImageSchema = baseSchema;
 export const updateImageParams = baseSchema.extend({}).omit({

@@ -15,7 +15,6 @@ export const collections = pgTable("collections", {
     .$defaultFn(() => nanoid()),
   name: text("name").notNull(),
   description: text("description"),
-  coverImageUrl: text("cover_image_url"),
   shopId: varchar("shop_id", { length: 191 })
     .references(() => shops.id, {
       onDelete: "cascade",

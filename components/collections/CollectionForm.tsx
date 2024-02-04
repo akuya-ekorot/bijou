@@ -169,29 +169,7 @@ const CollectionForm = ({
           <div className="h-6" />
         )}
       </div>
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.coverImageUrl ? "text-destructive" : "",
-          )}
-        >
-          Cover Image Url
-        </Label>
-        <Input
-          type="text"
-          name="coverImageUrl"
-          className={cn(errors?.coverImageUrl ? "ring ring-destructive" : "")}
-          defaultValue={collection?.coverImageUrl ?? ""}
-        />
-        {errors?.coverImageUrl ? (
-          <p className="text-xs text-destructive mt-2">
-            {errors.coverImageUrl[0]}
-          </p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
+
       {/* Schema fields end */}
 
       {/* Save Button */}
