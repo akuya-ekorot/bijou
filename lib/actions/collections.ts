@@ -30,20 +30,22 @@ const revalidateCollections = () => revalidatePath("/collections");
 export const createCollectionAction = async (input: NewCollectionParams) => {
   try {
     const payload = insertCollectionParams.parse(input);
-    await createCollection(payload);
+    const collection = await createCollection(payload);
     revalidateCollections();
+    return { collection, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { collection: null, error: handleErrors(e) };
   }
 };
 
 export const updateCollectionAction = async (input: UpdateCollectionParams) => {
   try {
     const payload = updateCollectionParams.parse(input);
-    await updateCollection(payload.id, payload);
+    const collection = await updateCollection(payload.id, payload);
     revalidateCollections();
+    return { collection, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { collection: null, error: handleErrors(e) };
   }
 };
 
@@ -56,3 +58,4 @@ export const deleteCollectionAction = async (input: CollectionId) => {
     return handleErrors(e);
   }
 };
+

@@ -30,20 +30,22 @@ const revalidateImages = () => revalidatePath("/images");
 export const createImageAction = async (input: NewImageParams) => {
   try {
     const payload = insertImageParams.parse(input);
-    await createImage(payload);
+    const image = await createImage(payload);
     revalidateImages();
+    return { image, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { image: null, error: handleErrors(e) };
   }
 };
 
 export const updateImageAction = async (input: UpdateImageParams) => {
   try {
     const payload = updateImageParams.parse(input);
-    await updateImage(payload.id, payload);
+    const image = await updateImage(payload.id, payload);
     revalidateImages();
+    return { image, error: null };
   } catch (e) {
-    return handleErrors(e);
+    return { image: null, error: handleErrors(e) };
   }
 };
 
@@ -56,3 +58,4 @@ export const deleteImageAction = async (input: ImageId) => {
     return handleErrors(e);
   }
 };
+

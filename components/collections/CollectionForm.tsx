@@ -23,6 +23,10 @@ import {
   updateCollectionAction,
 } from "@/lib/actions/collections";
 import { getShopBySlug } from "@/lib/api/shops/queries";
+import { upload } from "@/lib/api/upload";
+import { insertMultipleImagesParams } from "@/lib/db/schema/images";
+import { createImageAction } from "@/lib/actions/images";
+import { createCollectionImageAction } from "@/lib/actions/collectionImages";
 
 const CollectionForm = ({
   collection,
@@ -38,8 +42,9 @@ const CollectionForm = ({
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
-  const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Collection>(insertCollectionParams);
+  const { errors, hasErrors, setErrors, handleChange } = useValidatedForm<
+    Collection & { images: FileList | null }
+  >(insertCollectionParams);
   const { toast } = useToast();
   const editing = !!collection?.id;
 
@@ -68,11 +73,47 @@ const CollectionForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (
+    { images }: { images: FileList | null },
+    data: FormData,
+  ) => {
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
+    const imageIds: Array<{ id: string }> = [];
 
+    //TODO: upload image if not null
+    if (images) {
+      const { data: uploadData, error: uploadError } = await upload(images);
+
+      if (uploadError || !uploadData) {
+        setErrors({ images: [uploadError ?? "error uploading images"] });
+        return;
+      }
+
+      const imageParsed = await insertMultipleImagesParams.safeParseAsync(
+        uploadData.urls,
+      );
+
+      if (!imageParsed.success) {
+        console.log(imageParsed.error);
+        setErrors({ images: ["Error parsing image data"] });
+        return;
+      }
+
+      for (const parsedImage of imageParsed.data) {
+        const { error, image } = await createImageAction(parsedImage);
+
+        if (error || !image) {
+          setErrors({ images: [error ?? "Error creating image records"] });
+          return;
+        }
+
+        imageIds.push({ id: image.image.id });
+      }
+    }
+
+    //TODO: create collection record
     const { shop } = await getShopBySlug(params.shopSlug as string);
 
     const collectionParsed = await insertCollectionParams.safeParseAsync({
@@ -102,7 +143,7 @@ const CollectionForm = ({
             action: editing ? "update" : "create",
           });
 
-        const error = editing
+        const { error, collection: newCollection } = editing
           ? await updateCollectionAction({ ...values, id: collection.id })
           : await createCollectionAction(values);
 
@@ -110,6 +151,33 @@ const CollectionForm = ({
           error: error ?? "Error",
           values: pendingCollection,
         };
+
+        if (error || !newCollection) {
+          onSuccess(
+            editing ? "update" : "create",
+            error ? errorFormatted : undefined,
+          );
+          return;
+        }
+
+        let order = 0;
+
+        //TODO: create collection image record
+        for (const imageId of imageIds) {
+          const imageError = await createCollectionImageAction({
+            collectionId: newCollection.collection.id,
+            imageId: imageId.id,
+            order,
+          });
+
+          if (imageError) {
+            setErrors({ images: [imageError] });
+            return;
+          }
+
+          order++;
+        }
+
         onSuccess(
           editing ? "update" : "create",
           error ? errorFormatted : undefined,
@@ -122,8 +190,16 @@ const CollectionForm = ({
     }
   };
 
+  const [images, setImages] = useState<FileList | null>(null);
+
+  const handleSubmitWrapper = handleSubmit.bind(null, { images });
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form
+      action={handleSubmitWrapper}
+      onChange={handleChange}
+      className={"space-y-8"}
+    >
       {/* Schema fields start */}
       <div>
         <Label
@@ -165,6 +241,31 @@ const CollectionForm = ({
           <p className="text-xs text-destructive mt-2">
             {errors.description[0]}
           </p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.images ? "text-destructive" : "",
+          )}
+        >
+          Images
+        </Label>
+        <Input
+          type="file"
+          multiple
+          name="images"
+          className={cn(errors?.images ? "ring ring-destructive" : "")}
+          onChange={(e) => {
+            setImages(e.target.files);
+          }}
+        />
+        {errors?.images ? (
+          <p className="text-xs text-destructive mt-2">{errors.images[0]}</p>
         ) : (
           <div className="h-6" />
         )}

@@ -81,7 +81,7 @@ const ImageForm = ({
       return;
     }
 
-    // upload image
+    // upload images
     const { data: uploadData, error: uploadError } = await upload(images);
 
     if (uploadError || !uploadData) {
@@ -120,7 +120,7 @@ const ImageForm = ({
               action: editing ? "update" : "create",
             });
 
-          const error = editing
+          const { error } = editing
             ? await updateImageAction({ ...values, id: image.id })
             : await createImageAction(values);
 

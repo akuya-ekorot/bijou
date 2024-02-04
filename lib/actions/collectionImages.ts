@@ -27,7 +27,9 @@ const handleErrors = (e: unknown) => {
 
 const revalidateCollectionImages = () => revalidatePath("/collection-images");
 
-export const createCollectionImageAction = async (input: NewCollectionImageParams) => {
+export const createCollectionImageAction = async (
+  input: NewCollectionImageParams,
+) => {
   try {
     const payload = insertCollectionImageParams.parse(input);
     await createCollectionImage(payload);
@@ -37,7 +39,9 @@ export const createCollectionImageAction = async (input: NewCollectionImageParam
   }
 };
 
-export const updateCollectionImageAction = async (input: UpdateCollectionImageParams) => {
+export const updateCollectionImageAction = async (
+  input: UpdateCollectionImageParams,
+) => {
   try {
     const payload = updateCollectionImageParams.parse(input);
     await updateCollectionImage(payload.id, payload);
@@ -56,3 +60,4 @@ export const deleteCollectionImageAction = async (input: CollectionImageId) => {
     return handleErrors(e);
   }
 };
+
