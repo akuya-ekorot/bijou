@@ -1,27 +1,23 @@
-
 import { type Product, type CompleteProduct } from "@/lib/db/schema/products";
 import { OptimisticAction } from "@/lib/utils";
 import { useOptimistic } from "react";
 
-export type TAddOptimistic = (action: OptimisticAction<Product>) => void;
+export type TAddOptimistic = (
+  action: OptimisticAction<CompleteProduct>,
+) => void;
 
-export const useOptimisticProducts = (
-  products: CompleteProduct[],
-  
-) => {
+export const useOptimisticProducts = (products: CompleteProduct[]) => {
   const [optimisticProducts, addOptimisticProduct] = useOptimistic(
     products,
     (
       currentState: CompleteProduct[],
-      action: OptimisticAction<Product>,
+      action: OptimisticAction<CompleteProduct>,
     ): CompleteProduct[] => {
       const { data } = action;
 
-      
-
       const optimisticProduct = {
         ...data,
-        
+
         id: "optimistic",
       };
 

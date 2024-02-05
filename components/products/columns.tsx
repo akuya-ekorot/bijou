@@ -14,6 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "../ui/badge";
 import { Collection } from "@/lib/db/schema/collections";
+import Link from "next/link";
 
 export const columns: ColumnDef<CompleteProduct>[] = [
   {
@@ -61,7 +62,7 @@ export const columns: ColumnDef<CompleteProduct>[] = [
       return (
         <div className="flex flex-wrap items-center gap-2">
           {collections.map((collection) => (
-            <Badge>{collection.name}</Badge>
+            <Badge key={collection.id}>{collection.name}</Badge>
           ))}
         </div>
       );
@@ -84,8 +85,6 @@ export const columns: ColumnDef<CompleteProduct>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
-      const router = useRouter();
-      const params = useParams();
 
       return (
         <DropdownMenu>
@@ -97,14 +96,14 @@ export const columns: ColumnDef<CompleteProduct>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              className="flex items-center gap-2"
-              onClick={() => {
-                router.push(`/${params.shopSlug}/products/${product.id}`);
-              }}
-            >
-              <Eye className="h-4 w-4" />
-              View product
+            <DropdownMenuItem>
+              <Link
+                className="flex items-center gap-2"
+                href={`products/${product.id}`}
+              >
+                <Eye className="h-4 w-4" />
+                View product
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Button

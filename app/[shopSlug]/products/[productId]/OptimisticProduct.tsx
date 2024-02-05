@@ -2,16 +2,23 @@
 
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/[shopSlug]/products/useOptimisticProducts";
-import { type Product } from "@/lib/db/schema/products";
+import { CompleteProduct } from "@/lib/db/schema/products";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import ProductForm from "@/components/products/ProductForm";
+import { CompleteCollection } from "@/lib/db/schema/collections";
 
-export default function OptimisticProduct({ product }: { product: Product }) {
+export default function OptimisticProduct({
+  collections,
+  product,
+}: {
+  collections: CompleteCollection[];
+  product: CompleteProduct;
+}) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Product) => {
+  const openModal = (_?: CompleteProduct) => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);
@@ -23,6 +30,7 @@ export default function OptimisticProduct({ product }: { product: Product }) {
     <div className="m-4">
       <Modal open={open} setOpen={setOpen}>
         <ProductForm
+          collections={collections}
           product={product}
           closeModal={closeModal}
           openModal={openModal}

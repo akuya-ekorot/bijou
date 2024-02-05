@@ -45,11 +45,34 @@ export const getProducts = async () => {
 export const getProductById = async (id: ProductId) => {
   const { session } = await getUserAuth();
   const { id: productId } = productIdSchema.parse({ id });
-  const [p] = await db
-    .select()
+  const p = await db
+    .select({ product: products, collection: collections })
     .from(products)
     .where(
       and(eq(products.id, productId), eq(products.userId, session?.user.id!)),
-    );
-  return { product: p };
+    )
+    .leftJoin(collectionProducts, eq(collectionProducts.productId, products.id))
+    .leftJoin(collections, eq(collections.id, collectionProducts.collectionId));
+
+  const pp = new Map();
+
+  for (const { collection, product } of p) {
+    if (!pp.has(product.id)) {
+      pp.set(product.id, {
+        ...product,
+        collections: [],
+      });
+    }
+
+    if (collection) {
+      const col = pp.get(product.id);
+      col.collections.push(collection);
+    }
+  }
+
+  return {
+    product: Array.from(pp.values())[0] as Product & {
+      collections: Array<Collection>;
+    },
+  };
 };
