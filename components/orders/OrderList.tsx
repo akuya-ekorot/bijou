@@ -18,16 +18,16 @@ type TOpenModal = (order?: Order) => void;
 export default function OrderList({
   orders,
   customers,
-  payments 
+  payments,
 }: {
   orders: CompleteOrder[];
   customers: Customer[];
-  payments: Payment[] 
+  payments: Payment[];
 }) {
   const { optimisticOrders, addOptimisticOrder } = useOptimisticOrders(
     orders,
     customers,
-  payments 
+    payments,
   );
   const [open, setOpen] = useState(false);
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
@@ -50,7 +50,7 @@ export default function OrderList({
           openModal={openModal}
           closeModal={closeModal}
           customers={customers}
-        payments={payments}
+          payments={payments}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -63,11 +63,7 @@ export default function OrderList({
       ) : (
         <ul>
           {optimisticOrders.map((order) => (
-            <Order
-              order={order}
-              key={order.order.id}
-              openModal={openModal}
-            />
+            <Order order={order} key={order.order.id} openModal={openModal} />
           ))}
         </ul>
       )}
@@ -94,12 +90,10 @@ const Order = ({
       )}
     >
       <div className="w-full">
-        <div>{order.order.customer_id}</div>
+        <div>{order.order.customerId}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/orders/" + order.order.id }>
-          Edit
-        </Link>
+        <Link href={"/orders/" + order.order.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -116,7 +110,8 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Orders </Button>
+          <PlusIcon className="h-4" /> New Orders{" "}
+        </Button>
       </div>
     </div>
   );

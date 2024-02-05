@@ -19,12 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-
-
 
 import { type Order, insertOrderParams } from "@/lib/db/schema/orders";
 import {
@@ -56,9 +58,7 @@ const OrderForm = ({
     useValidatedForm<Order>(insertOrderParams);
   const { toast } = useToast();
   const editing = !!order?.id;
-    const [paidAt, setPaidAt] = useState<Date | undefined>(
-    order?.paidAt,
-  );
+  const [paidAt, setPaidAt] = useState<Date | undefined>(order?.paidAt);
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
@@ -102,13 +102,15 @@ const OrderForm = ({
       id: order?.id ?? "",
       userId: order?.userId ?? "",
       ...values,
+      paidAt: new Date(orderParsed.data.paidAt),
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingOrder,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingOrder,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updateOrderAction({ ...values, id: order.id })
@@ -116,7 +118,7 @@ const OrderForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingOrder 
+          values: pendingOrder,
         };
         onSuccess(
           editing ? "update" : "create",
@@ -133,7 +135,7 @@ const OrderForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-      
+
       <div>
         <Label
           className={cn(
@@ -150,20 +152,23 @@ const OrderForm = ({
             <SelectValue placeholder="Select a customer" />
           </SelectTrigger>
           <SelectContent>
-          {customers?.map((customer) => (
-            <SelectItem key={customer.id} value={customer.id.toString()}>
-              {customer.id}{/* TODO: Replace with a field from the customer model */}
-            </SelectItem>
-           ))}
+            {customers?.map((customer) => (
+              <SelectItem key={customer.id} value={customer.id.toString()}>
+                {customer.id}
+                {/* TODO: Replace with a field from the customer model */}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors?.customerId ? (
-          <p className="text-xs text-destructive mt-2">{errors.customerId[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.customerId[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
       </div>
-<div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -216,7 +221,7 @@ const OrderForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -237,7 +242,7 @@ const OrderForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -275,11 +280,12 @@ const OrderForm = ({
             <SelectValue placeholder="Select a payment" />
           </SelectTrigger>
           <SelectContent>
-          {payments?.map((payment) => (
-            <SelectItem key={payment.id} value={payment.id.toString()}>
-              {payment.id}{/* TODO: Replace with a field from the payment model */}
-            </SelectItem>
-           ))}
+            {payments?.map((payment) => (
+              <SelectItem key={payment.id} value={payment.id.toString()}>
+                {payment.id}
+                {/* TODO: Replace with a field from the payment model */}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors?.paymentId ? (
