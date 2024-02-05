@@ -13,7 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import { type Product, insertProductParams } from "@/lib/db/schema/products";
+import {
+  type Product,
+  insertProductParams,
+  CompleteProduct,
+} from "@/lib/db/schema/products";
 import {
   createProductAction,
   deleteProductAction,
@@ -23,23 +27,35 @@ import { upload } from "@/lib/api/upload";
 import { insertMultipleImagesParams } from "@/lib/db/schema/images";
 import { createImageAction } from "@/lib/actions/images";
 import { createProductImageAction } from "@/lib/actions/productImages";
+import { Collection, CompleteCollection } from "@/lib/db/schema/collections";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "../ui/command";
+import { createCollectionProductAction } from "@/lib/actions/collectionProducts";
 
 const ProductForm = ({
+  collections,
   product,
   openModal,
   closeModal,
   addOptimistic,
   postSuccess,
 }: {
-  product?: Product | null;
-
-  openModal?: (product?: Product) => void;
+  collections: Array<CompleteCollection>;
+  product?: CompleteProduct | null;
+  openModal?: (product?: CompleteProduct) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
   const { errors, hasErrors, setErrors, handleChange } = useValidatedForm<
-    Product & { images: FileList | null }
+    Product & { images: FileList | null; collections: Array<Collection> }
   >(insertProductParams);
   const { toast } = useToast();
   const editing = !!product?.id;
@@ -51,7 +67,7 @@ const ProductForm = ({
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Product },
+    data?: { error: string; values: CompleteProduct },
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -69,7 +85,10 @@ const ProductForm = ({
   };
 
   const handleSubmit = async (
-    { images }: { images: FileList | null },
+    {
+      images,
+      collections,
+    }: { collections: Array<Collection>; images: FileList | null },
     data: FormData,
   ) => {
     setErrors(null);
@@ -108,6 +127,7 @@ const ProductForm = ({
     }
 
     const payload = Object.fromEntries(data.entries());
+    console.log("payload", payload);
     const productParsed = await insertProductParams.safeParseAsync(payload);
     if (!productParsed.success) {
       setErrors(productParsed?.error.flatten().fieldErrors);
@@ -123,11 +143,15 @@ const ProductForm = ({
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
     }));
-    const pendingProduct: Product = {
+
+    console.log(values);
+
+    const pendingProduct: CompleteProduct = {
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
       id: product?.id ?? "",
       userId: product?.userId ?? "",
+      collections: product?.collections ?? [],
       ...values,
     };
     try {
@@ -173,6 +197,19 @@ const ProductForm = ({
           order++;
         }
 
+        //TODO: create product collection record
+        for (const collection of collections) {
+          const collectionError = await createCollectionProductAction({
+            productId: newProduct.product.id,
+            collectionId: collection.id,
+          });
+
+          if (collectionError) {
+            setErrors({ collections: [collectionError] });
+            return;
+          }
+        }
+
         onSuccess(
           editing ? "update" : "create",
           error ? errorFormatted : undefined,
@@ -186,8 +223,32 @@ const ProductForm = ({
   };
 
   const [images, setImages] = useState<FileList | null>(null);
+  const [productCollections, setProductCollections] = useState<
+    Array<Collection>
+  >(product?.collections ?? []);
 
-  const handleSubmitWrapper = handleSubmit.bind(null, { images });
+  const [openCollectionCombobox, setOpenCollectionComobox] = useState(false);
+  const [collectionSearch, setCollectionSearch] = useState("");
+
+  const handleSelectCollection = (id: string) => {
+    const collection = collections.find((c) => c.id === id);
+
+    if (!collection) return;
+
+    setProductCollections((prev) => {
+      if (prev.find((c) => c.id === collection.id)) {
+        return prev.filter((c) => c.id !== collection.id);
+      }
+      return [...prev, collection];
+    });
+
+    setOpenCollectionComobox(false);
+  };
+
+  const handleSubmitWrapper = handleSubmit.bind(null, {
+    images,
+    collections: productCollections,
+  });
   return (
     <form
       action={handleSubmitWrapper}
@@ -270,7 +331,8 @@ const ProductForm = ({
           Price
         </Label>
         <Input
-          type="text"
+          type="number"
+          min="0"
           name="price"
           className={cn(errors?.price ? "ring ring-destructive" : "")}
           defaultValue={product?.price ?? ""}
@@ -302,6 +364,63 @@ const ProductForm = ({
         />
         {errors?.images ? (
           <p className="text-xs text-destructive mt-2">{errors.images[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.collections ? "text-destructive" : "",
+          )}
+        >
+          Collections
+        </Label>
+        <div>
+          <Popover
+            open={openCollectionCombobox}
+            onOpenChange={setOpenCollectionComobox}
+          >
+            <PopoverTrigger asChild>
+              <Button variant="outline" role="combobox">
+                Select Collections
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Command>
+                <CommandInput placeholder="Search collections..." />
+                <CommandEmpty>No collection found.</CommandEmpty>
+                <CommandGroup>
+                  {collections.map((collection) => (
+                    <CommandItem
+                      key={collection.id}
+                      value={collection.id}
+                      onSelect={handleSelectCollection}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          productCollections.find((c) => c.id === collection.id)
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {collection.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {errors?.collections ? (
+          <p className="text-xs text-destructive mt-2">
+            {errors.collections[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}

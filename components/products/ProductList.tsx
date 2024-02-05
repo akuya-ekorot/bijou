@@ -11,19 +11,26 @@ import { useOptimisticProducts } from "@/app/[shopSlug]/products/useOptimisticPr
 import { Button } from "@/components/ui/button";
 import ProductForm from "./ProductForm";
 import { PlusIcon } from "lucide-react";
+import { DataTable } from "../shared/data-table";
+import { columns } from "./columns";
+import { CompleteCollection } from "@/lib/db/schema/collections";
 
-type TOpenModal = (product?: Product) => void;
+type TOpenModal = (product?: CompleteProduct) => void;
 
 export default function ProductList({
+  collections,
   products,
 }: {
+  collections: Array<CompleteCollection>;
   products: CompleteProduct[];
 }) {
   const { optimisticProducts, addOptimisticProduct } =
     useOptimisticProducts(products);
   const [open, setOpen] = useState(false);
-  const [activeProduct, setActiveProduct] = useState<Product | null>(null);
-  const openModal = (product?: Product) => {
+  const [activeProduct, setActiveProduct] = useState<CompleteProduct | null>(
+    null,
+  );
+  const openModal = (product?: CompleteProduct) => {
     setOpen(true);
     product ? setActiveProduct(product) : setActiveProduct(null);
   };
@@ -37,6 +44,7 @@ export default function ProductList({
         title={activeProduct ? "Edit Product" : "Create Products"}
       >
         <ProductForm
+          collections={collections}
           product={activeProduct}
           addOptimistic={addOptimisticProduct}
           openModal={openModal}
@@ -51,11 +59,7 @@ export default function ProductList({
       {optimisticProducts.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <ul>
-          {optimisticProducts.map((product) => (
-            <Product product={product} key={product.id} openModal={openModal} />
-          ))}
-        </ul>
+        <DataTable columns={columns} data={optimisticProducts} />
       )}
     </div>
   );

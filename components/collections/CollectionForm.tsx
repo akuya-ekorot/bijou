@@ -1,32 +1,33 @@
 import { z } from "zod";
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 
-import { type Action, cn } from "@/lib/utils";
 import { type TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
+import { cn, type Action } from "@/lib/utils";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import {
-  type Collection,
-  insertCollectionParams,
-} from "@/lib/db/schema/collections";
+import { createCollectionImageAction } from "@/lib/actions/collectionImages";
 import {
   createCollectionAction,
   deleteCollectionAction,
   updateCollectionAction,
 } from "@/lib/actions/collections";
+import { createImageAction } from "@/lib/actions/images";
 import { getShopBySlug } from "@/lib/api/shops/queries";
 import { upload } from "@/lib/api/upload";
+import {
+  CompleteCollection,
+  insertCollectionParams,
+  type Collection,
+} from "@/lib/db/schema/collections";
 import { insertMultipleImagesParams } from "@/lib/db/schema/images";
-import { createImageAction } from "@/lib/actions/images";
-import { createCollectionImageAction } from "@/lib/actions/collectionImages";
 
 const CollectionForm = ({
   collection,
@@ -35,9 +36,8 @@ const CollectionForm = ({
   addOptimistic,
   postSuccess,
 }: {
-  collection?: Collection | null;
-
-  openModal?: (collection?: Collection) => void;
+  collection?: CompleteCollection | null;
+  openModal?: (collection?: CompleteCollection) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
@@ -56,7 +56,7 @@ const CollectionForm = ({
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Collection },
+    data?: { error: string; values: CompleteCollection },
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -122,6 +122,7 @@ const CollectionForm = ({
     });
 
     if (!collectionParsed.success) {
+      console.log(collectionParsed.error);
       setErrors(collectionParsed?.error.flatten().fieldErrors);
       return;
     }
@@ -136,24 +137,28 @@ const CollectionForm = ({
       createdAt: collection?.createdAt ?? new Date(),
     }));
 
-    const pendingCollection: Collection = {
+    const pendingCollection: CompleteCollection = {
       updatedAt: collection?.updatedAt ?? new Date(),
       createdAt: collection?.createdAt ?? new Date(),
       id: collection?.id ?? "",
       userId: collection?.userId ?? "",
+      images: collection?.images ?? pendingImages,
+      products: collection?.products ?? [],
       ...values,
     };
     try {
       startMutation(async () => {
         addOptimistic &&
           addOptimistic({
-            data: { ...pendingCollection, images: pendingImages },
+            data: pendingCollection,
             action: editing ? "update" : "create",
           });
 
         const { error, collection: newCollection } = editing
           ? await updateCollectionAction({ ...values, id: collection.id })
           : await createCollectionAction(values);
+
+        console.log("created collection", newCollection);
 
         const errorFormatted = {
           error: error ?? "Error",
@@ -230,6 +235,29 @@ const CollectionForm = ({
           <div className="h-6" />
         )}
       </div>
+
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.slug ? "text-destructive" : "",
+          )}
+        >
+          Slug
+        </Label>
+        <Input
+          type="text"
+          name="slug"
+          className={cn(errors?.slug ? "ring ring-destructive" : "")}
+          defaultValue={collection?.slug ?? ""}
+        />
+        {errors?.slug ? (
+          <p className="text-xs text-destructive mt-2">{errors.slug[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+
       <div>
         <Label
           className={cn(
