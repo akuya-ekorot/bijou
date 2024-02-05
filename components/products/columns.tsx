@@ -1,6 +1,6 @@
 import { CompleteProduct } from "@/lib/db/schema/products";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Eye, MoreHorizontal, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -8,15 +8,47 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useParams, useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<CompleteProduct>[] = [
   {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "price",
@@ -49,14 +81,23 @@ export const columns: ColumnDef<CompleteProduct>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
+              className="flex items-center gap-2"
               onClick={() => {
                 router.push(`/${params.shopSlug}/products/${product.id}`);
               }}
             >
-              <Eye />
+              <Eye className="h-4 w-4" />
               View product
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete Product</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Button
+                variant={"destructive"}
+                className="flex items-center gap-2"
+              >
+                <Trash className="w-4 h-4" />
+                Delete Product
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
