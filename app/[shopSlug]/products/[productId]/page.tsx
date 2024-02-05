@@ -36,7 +36,7 @@ const Product = async ({ id }: { id: string }) => {
     <Suspense fallback={<Loading />}>
       <div className="relative">
         <Button asChild variant="ghost">
-          <Link href="/products">
+          <Link href="../products">
             <ChevronLeftIcon />
           </Link>
         </Button>
