@@ -4,18 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import {
-  type Collection,
-  CompleteCollection,
-} from "@/lib/db/schema/collections";
+import { CompleteCollection } from "@/lib/db/schema/collections";
 import Modal from "@/components/shared/Modal";
 
 import { useOptimisticCollections } from "@/app/[shopSlug]/collections/useOptimisticCollections";
 import { Button } from "@/components/ui/button";
 import CollectionForm from "./CollectionForm";
 import { PlusIcon } from "lucide-react";
+import { DataTable } from "../shared/data-table";
+import { columns } from "./columns";
 
-type TOpenModal = (collection?: Collection) => void;
+type TOpenModal = (collection?: CompleteCollection) => void;
 
 export default function CollectionList({
   collections,
@@ -26,10 +25,9 @@ export default function CollectionList({
   const { optimisticCollections, addOptimisticCollection } =
     useOptimisticCollections(collections);
   const [open, setOpen] = useState(false);
-  const [activeCollection, setActiveCollection] = useState<Collection | null>(
-    null,
-  );
-  const openModal = (collection?: Collection) => {
+  const [activeCollection, setActiveCollection] =
+    useState<CompleteCollection | null>(null);
+  const openModal = (collection?: CompleteCollection) => {
     setOpen(true);
     collection ? setActiveCollection(collection) : setActiveCollection(null);
   };
@@ -57,15 +55,7 @@ export default function CollectionList({
       {optimisticCollections.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <ul>
-          {optimisticCollections.map((collection) => (
-            <Collection
-              collection={collection}
-              key={collection.id}
-              openModal={openModal}
-            />
-          ))}
-        </ul>
+        <DataTable columns={columns} data={optimisticCollections} />
       )}
     </div>
   );
@@ -93,7 +83,7 @@ const Collection = ({
         <div>{collection.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={"/collections/" + collection.id}>Edit</Link>
+        <Link href={"collections/" + collection.id}>Edit</Link>
       </Button>
     </li>
   );

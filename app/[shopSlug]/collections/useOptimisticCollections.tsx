@@ -3,11 +3,12 @@ import {
   type CompleteCollection,
 } from "@/lib/db/schema/collections";
 import { TImage } from "@/lib/db/schema/images";
+import { Product } from "@/lib/db/schema/products";
 import { OptimisticAction } from "@/lib/utils";
 import { useOptimistic } from "react";
 
 export type TAddOptimistic = (
-  action: OptimisticAction<Collection & { images: TImage[] }>,
+  action: OptimisticAction<CompleteCollection>,
 ) => void;
 
 export const useOptimisticCollections = (collections: CompleteCollection[]) => {
@@ -15,7 +16,7 @@ export const useOptimisticCollections = (collections: CompleteCollection[]) => {
     collections,
     (
       currentState: CompleteCollection[],
-      action: OptimisticAction<Collection & { images: TImage[] }>,
+      action: OptimisticAction<CompleteCollection>,
     ): CompleteCollection[] => {
       const { data } = action;
 

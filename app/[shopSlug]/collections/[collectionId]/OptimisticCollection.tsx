@@ -2,7 +2,10 @@
 
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
-import { type Collection } from "@/lib/db/schema/collections";
+import {
+  CompleteCollection,
+  type Collection,
+} from "@/lib/db/schema/collections";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -12,10 +15,10 @@ import CollectionForm from "@/components/collections/CollectionForm";
 export default function OptimisticCollection({
   collection,
 }: {
-  collection: Collection;
+  collection: CompleteCollection;
 }) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Collection) => {
+  const openModal = (_?: CompleteCollection) => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);

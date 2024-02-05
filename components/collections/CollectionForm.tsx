@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import {
   type Collection,
   insertCollectionParams,
+  CompleteCollection,
 } from "@/lib/db/schema/collections";
 import {
   createCollectionAction,
@@ -35,9 +36,8 @@ const CollectionForm = ({
   addOptimistic,
   postSuccess,
 }: {
-  collection?: Collection | null;
-
-  openModal?: (collection?: Collection) => void;
+  collection?: CompleteCollection | null;
+  openModal?: (collection?: CompleteCollection) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
@@ -56,7 +56,7 @@ const CollectionForm = ({
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Collection },
+    data?: { error: string; values: CompleteCollection },
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -136,11 +136,13 @@ const CollectionForm = ({
       createdAt: collection?.createdAt ?? new Date(),
     }));
 
-    const pendingCollection: Collection = {
+    const pendingCollection: CompleteCollection = {
       updatedAt: collection?.updatedAt ?? new Date(),
       createdAt: collection?.createdAt ?? new Date(),
       id: collection?.id ?? "",
       userId: collection?.userId ?? "",
+      images: collection?.images ?? [],
+      products: collection?.products ?? [],
       ...values,
     };
     try {
