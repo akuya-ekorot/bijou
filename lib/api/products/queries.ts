@@ -31,7 +31,7 @@ export const getProducts = async () => {
 
     if (collection) {
       const col = pp.get(product.id);
-      col.images.push(collection);
+      col.collections.push(collection);
     }
   }
 

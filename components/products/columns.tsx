@@ -54,7 +54,7 @@ export const columns: ColumnDef<CompleteProduct>[] = [
   },
   {
     accessorKey: "collections",
-    header: () => <div className="text-right">Collections</div>,
+    header: () => <div className="">Collections</div>,
     cell: ({ row }) => {
       const collections = row.getValue("collections") as Array<Collection>;
 

@@ -5,6 +5,7 @@ import ProductList from "@/components/products/ProductList";
 import { getProducts } from "@/lib/api/products/queries";
 
 import { checkAuth } from "@/lib/auth/utils";
+import { getCollections } from "@/lib/api/collections/queries";
 
 export const revalidate = 0;
 
@@ -25,10 +26,11 @@ const Products = async () => {
   await checkAuth();
 
   const { products } = await getProducts();
-  
+  const { collections } = await getCollections();
+
   return (
     <Suspense fallback={<Loading />}>
-      <ProductList products={products}  />
+      <ProductList products={products} collections={collections} />
     </Suspense>
   );
 };
