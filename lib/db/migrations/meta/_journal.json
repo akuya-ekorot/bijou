@@ -162,6 +162,13 @@
       "when": 1707133096766,
       "tag": "0022_thankful_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1707133242159,
+      "tag": "0023_chief_silverclaw",
+      "breakpoints": true
     }
   ]
 }
