@@ -59,7 +59,7 @@ export const columns: ColumnDef<CompleteProduct>[] = [
       const collections = row.getValue("collections") as Array<Collection>;
 
       return (
-        <div className="flex flex-wrap items-center">
+        <div className="flex flex-wrap items-center gap-2">
           {collections.map((collection) => (
             <Badge>{collection.name}</Badge>
           ))}

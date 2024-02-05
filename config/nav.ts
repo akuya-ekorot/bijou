@@ -21,8 +21,8 @@ export const additionalLinks: AdditionalLinks[] = [
         title: "Products",
         icon: Tags,
       },
-      { href: "/images", title: "Images", icon: Image },
       { href: "/collections", title: "Collections", icon: LibraryBig },
+      { href: "/images", title: "Images", icon: Image },
     ],
   },
 ];
