@@ -21,6 +21,7 @@ export default function ProductList({
 }: {
   products: CompleteProduct[];
 }) {
+  console.log(products);
   const { optimisticProducts, addOptimisticProduct } =
     useOptimisticProducts(products);
   const [open, setOpen] = useState(false);

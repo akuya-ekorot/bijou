@@ -5,16 +5,41 @@ import {
   type ProductId,
   productIdSchema,
   products,
+  Product,
 } from "@/lib/db/schema/products";
-import { collections } from "@/lib/db/schema/collections";
+import { Collection, collections } from "@/lib/db/schema/collections";
+import { collectionProducts } from "@/lib/db/schema/collectionProducts";
 
 export const getProducts = async () => {
   const { session } = await getUserAuth();
   const p = await db
     .select({ product: products, collection: collections })
     .from(products)
-    .where(eq(products.userId, session?.user.id!));
-  return { products: p };
+    .where(eq(products.userId, session?.user.id!))
+    .leftJoin(collectionProducts, eq(collectionProducts.productId, products.id))
+    .leftJoin(collections, eq(collections.id, collectionProducts.collectionId));
+
+  const pp = new Map();
+
+  for (const { collection, product } of p) {
+    if (!pp.has(product.id)) {
+      pp.set(product.id, {
+        ...product,
+        collections: [],
+      });
+    }
+
+    if (collection) {
+      const col = pp.get(product.id);
+      col.images.push(collection);
+    }
+  }
+
+  return {
+    products: Array.from(pp.values()) as Array<
+      Product & { collections: Array<Collection> }
+    >,
+  };
 };
 
 export const getProductById = async (id: ProductId) => {

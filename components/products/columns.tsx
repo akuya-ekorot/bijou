@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useParams, useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "../ui/badge";
+import { Collection } from "@/lib/db/schema/collections";
 
 export const columns: ColumnDef<CompleteProduct>[] = [
   {
@@ -47,6 +49,21 @@ export const columns: ColumnDef<CompleteProduct>[] = [
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "collections",
+    header: () => <div className="text-right">Collections</div>,
+    cell: ({ row }) => {
+      const collections = row.getValue("collections") as Array<Collection>;
+
+      return (
+        <div className="flex flex-wrap items-center">
+          {collections.map((collection) => (
+            <Badge>{collection.name}</Badge>
+          ))}
+        </div>
       );
     },
   },
