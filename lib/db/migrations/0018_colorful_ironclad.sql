@@ -1,0 +1,1 @@
+ALTER TABLE "collections" ADD COLUMN "slug" text NOT NULL;

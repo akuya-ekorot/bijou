@@ -12,6 +12,52 @@ import { TImage, images } from "@/lib/db/schema/images";
 import { Product, products } from "@/lib/db/schema/products";
 import { collectionProducts } from "@/lib/db/schema/collectionProducts";
 
+const formatCollection = (
+  c: {
+    collection: Collection;
+    product: Product | null;
+    image: TImage | null;
+  }[],
+) => {
+  const cc = new Map<
+    string,
+    Collection & { images: TImage[]; products: Product[] }
+  >();
+
+  if (!c) return cc;
+
+  for (const { collection, product, image } of c) {
+    if (!cc.has(collection.id)) {
+      cc.set(collection.id, {
+        ...collection,
+        images: [],
+        products: [],
+      });
+    }
+
+    if (product) {
+      const col = cc.get(collection.id);
+
+      const productExists = col?.products.some((p) => p.id === product.id);
+
+      if (!productExists) {
+        col?.products.push(product);
+      }
+    }
+
+    if (image) {
+      const col = cc.get(collection.id);
+      const imageExists = col?.images.some((i: TImage) => i.id === image.id);
+
+      if (!imageExists) {
+        col?.images.push(image);
+      }
+    }
+  }
+
+  return cc;
+};
+
 export const getCollections = async () => {
   const { session } = await getUserAuth();
 
@@ -30,32 +76,10 @@ export const getCollections = async () => {
     )
     .leftJoin(products, eq(collectionProducts.productId, products.id));
 
-  const cc = new Map();
-
-  for (const { collection, image, product } of c) {
-    if (!cc.has(collection.id)) {
-      cc.set(collection.id, {
-        ...collection,
-        images: [],
-        products: [],
-      });
-    }
-
-    if (image) {
-      const col = cc.get(collection.id);
-      col.images.push(image);
-    }
-
-    if (product) {
-      const col = cc.get(collection.id);
-      col.products.push(product);
-    }
-  }
+  const cc = formatCollection(c);
 
   return {
-    collections: Array.from(cc.values()) as Array<
-      Collection & { images: Array<TImage>; products: Array<Product> }
-    >,
+    collections: Array.from(cc.values()),
   };
 };
 
@@ -82,32 +106,9 @@ export const getCollectionById = async (id: CollectionId) => {
     )
     .leftJoin(products, eq(collectionProducts.productId, products.id));
 
-  const cc = new Map();
-
-  for (const { collection, image, product } of c) {
-    if (!cc.has(collection.id)) {
-      cc.set(collection.id, {
-        ...collection,
-        images: [],
-        products: [],
-      });
-    }
-
-    if (image) {
-      const col = cc.get(collection.id);
-      col.images.push(image);
-    }
-
-    if (product) {
-      const col = cc.get(collection.id);
-      col.products.push(product);
-    }
-  }
+  const cc = formatCollection(c);
 
   return {
-    collection: Array.from(cc.values())[0] as Collection & {
-      images: Array<TImage>;
-      products: Array<Product>;
-    },
+    collection: Array.from(cc.values())[0],
   };
 };
