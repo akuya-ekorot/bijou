@@ -148,6 +148,20 @@
       "when": 1707132338472,
       "tag": "0020_pretty_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1707132773212,
+      "tag": "0021_thankful_the_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1707133096766,
+      "tag": "0022_thankful_guardian",
+      "breakpoints": true
     }
   ]
 }
