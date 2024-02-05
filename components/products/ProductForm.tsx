@@ -144,14 +144,13 @@ const ProductForm = ({
       createdAt: product?.createdAt ?? new Date(),
     }));
 
-    console.log(values);
-
     const pendingProduct: CompleteProduct = {
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
       id: product?.id ?? "",
       userId: product?.userId ?? "",
       collections: product?.collections ?? [],
+      images: pendingImages,
       ...values,
     };
     try {
