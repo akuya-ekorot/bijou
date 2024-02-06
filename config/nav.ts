@@ -1,6 +1,7 @@
 import { SidebarLink } from '@/components/SidebarItems';
 import {
   Cog,
+  File,
   FileStack,
   Globe,
   HomeIcon,
@@ -24,6 +25,11 @@ export const additionalLinks: AdditionalLinks[] = [
   {
     title: 'Entities',
     links: [
+      {
+        href: '/heroes',
+        title: 'Heroes',
+        icon: File,
+      },
       {
         href: '/pages',
         title: 'Pages',
