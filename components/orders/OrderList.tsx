@@ -8,7 +8,7 @@ import { type Order, CompleteOrder } from '@/lib/db/schema/orders';
 import Modal from '@/components/shared/Modal';
 import { type Customer } from '@/lib/db/schema/customers';
 import { type Payment } from '@/lib/db/schema/payments';
-import { useOptimisticOrders } from '@/app/orders/useOptimisticOrders';
+import { useOptimisticOrders } from '@/app/[shopSlug]/orders/useOptimisticOrders';
 import { Button } from '@/components/ui/button';
 import OrderForm from './OrderForm';
 import { PlusIcon } from 'lucide-react';

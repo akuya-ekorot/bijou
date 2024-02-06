@@ -1,23 +1,15 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/pages/useOptimisticPages";
-import { type Page } from "@/lib/db/schema/pages";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/[shopSlug]/pages/useOptimisticPages';
+import { type Page } from '@/lib/db/schema/pages';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import PageForm from "@/components/pages/PageForm";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import PageForm from '@/components/pages/PageForm';
 
-
-export default function OptimisticPage({ 
-  page,
-   
-}: { 
-  page: Page; 
-  
-  
-}) {
+export default function OptimisticPage({ page }: { page: Page }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Page) => {
     setOpen(true);
@@ -32,7 +24,6 @@ export default function OptimisticPage({
       <Modal open={open} setOpen={setOpen}>
         <PageForm
           page={page}
-          
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updatePage}
@@ -46,8 +37,8 @@ export default function OptimisticPage({
       </div>
       <pre
         className={cn(
-          "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticPage.id === "optimistic" ? "animate-pulse" : "",
+          'bg-secondary p-4 rounded-lg break-all text-wrap',
+          optimisticPage.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         {JSON.stringify(optimisticPage, null, 2)}
