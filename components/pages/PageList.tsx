@@ -14,7 +14,13 @@ import { PlusIcon } from 'lucide-react';
 
 type TOpenModal = (page?: Page) => void;
 
-export default function PageList({ pages }: { pages: CompletePage[] }) {
+export default function PageList({
+  pages,
+  shopId,
+}: {
+  pages: CompletePage[];
+  shopId: string;
+}) {
   const { optimisticPages, addOptimisticPage } = useOptimisticPages(pages);
   const [open, setOpen] = useState(false);
   const [activePage, setActivePage] = useState<Page | null>(null);
@@ -32,6 +38,7 @@ export default function PageList({ pages }: { pages: CompletePage[] }) {
         title={activePage ? 'Edit Page' : 'Create Pages'}
       >
         <PageForm
+          shopId={shopId}
           page={activePage}
           addOptimistic={addOptimisticPage}
           openModal={openModal}
@@ -78,7 +85,7 @@ const Page = ({
         <div>{page.title}</div>
       </div>
       <Button variant={'link'} asChild>
-        <Link href={'/pages/' + page.id}>Edit</Link>
+        <Link href={'pages/' + page.id}>Edit</Link>
       </Button>
     </li>
   );

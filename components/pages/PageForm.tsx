@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { useState, useTransition } from 'react';
 import { useFormStatus } from 'react-dom';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
@@ -21,6 +21,7 @@ import {
 } from '@/lib/actions/pages';
 
 const PageForm = ({
+  shopId,
   page,
   openModal,
   closeModal,
@@ -28,7 +29,7 @@ const PageForm = ({
   postSuccess,
 }: {
   page?: Page | null;
-
+  shopId: string;
   openModal?: (page?: Page) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -43,6 +44,9 @@ const PageForm = ({
   const [pending, startMutation] = useTransition();
 
   const router = useRouter();
+
+  const params = useParams();
+  const shopSlug = params.shopSlug as string;
 
   const onSuccess = (
     action: Action,
@@ -63,11 +67,17 @@ const PageForm = ({
     });
   };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (
+    { shopId }: { shopId: string },
+    data: FormData,
+  ) => {
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const pageParsed = await insertPageParams.safeParseAsync(payload);
+    const pageParsed = await insertPageParams.safeParseAsync({
+      ...payload,
+      shopId,
+    });
     if (!pageParsed.success) {
       setErrors(pageParsed?.error.flatten().fieldErrors);
       return;
@@ -110,8 +120,14 @@ const PageForm = ({
     }
   };
 
+  const handleSubmitWrapper = handleSubmit.bind(null, { shopId });
+
   return (
-    <form action={handleSubmit} onChange={handleChange} className={'space-y-8'}>
+    <form
+      action={handleSubmitWrapper}
+      onChange={handleChange}
+      className={'space-y-8'}
+    >
       {/* Schema fields start */}
       <div>
         <Label

@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button';
 import Modal from '@/components/shared/Modal';
 import PageForm from '@/components/pages/PageForm';
 
-export default function OptimisticPage({ page }: { page: Page }) {
+export default function OptimisticPage({
+  page,
+  shopId,
+}: {
+  page: Page;
+  shopId: string;
+}) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Page) => {
     setOpen(true);
@@ -23,6 +29,7 @@ export default function OptimisticPage({ page }: { page: Page }) {
     <div className="m-4">
       <Modal open={open} setOpen={setOpen}>
         <PageForm
+          shopId={shopId}
           page={page}
           closeModal={closeModal}
           openModal={openModal}
