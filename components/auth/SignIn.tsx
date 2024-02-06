@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import { useState } from "react";
+} from '../ui/card';
+import { Input } from '../ui/input';
+import { useState } from 'react';
 
 export default function SignIn() {
   const { data: session, status } = useSession();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
-  if (status === "loading") return <div>Loading...</div>;
+  if (status === 'loading') return <div>Loading...</div>;
 
   if (session) {
     return (
       <div className="space-y-3">
         <p>
-          Signed in as{" "}
+          Signed in as{' '}
           <span className="font-medium">{session.user?.email}</span>
         </p>
-        <Button variant={"destructive"} onClick={() => signOut()}>
+        <Button variant={'destructive'} onClick={() => signOut()}>
           Sign out
         </Button>
       </div>
@@ -50,9 +50,9 @@ export default function SignIn() {
           <Button
             className="w-full"
             onClick={() =>
-              signIn("email", {
+              signIn('email', {
                 email,
-                callbackUrl: "/",
+                callbackUrl: '/',
               })
             }
           >

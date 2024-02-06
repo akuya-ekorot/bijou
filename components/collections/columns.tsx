@@ -1,28 +1,28 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Eye, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CompleteCollection } from "@/lib/db/schema/collections";
-import { Product } from "@/lib/db/schema/products";
-import Link from "next/link";
-import { Badge } from "../ui/badge";
+} from '@/components/ui/dropdown-menu';
+import { CompleteCollection } from '@/lib/db/schema/collections';
+import { Product } from '@/lib/db/schema/products';
+import Link from 'next/link';
+import { Badge } from '../ui/badge';
 
 export const columns: ColumnDef<CompleteCollection>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -39,12 +39,12 @@ export const columns: ColumnDef<CompleteCollection>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -53,10 +53,10 @@ export const columns: ColumnDef<CompleteCollection>[] = [
     },
   },
   {
-    accessorKey: "products",
+    accessorKey: 'products',
     header: () => <div className="">No. of products</div>,
     cell: ({ row }) => {
-      const products = row.getValue("products") as Array<Product>;
+      const products = row.getValue('products') as Array<Product>;
 
       return (
         <p className="flex flex-wrap items-center gap-2">
@@ -66,7 +66,7 @@ export const columns: ColumnDef<CompleteCollection>[] = [
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const collection = row.original;
 
@@ -91,7 +91,7 @@ export const columns: ColumnDef<CompleteCollection>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Button
-                variant={"destructive"}
+                variant={'destructive'}
                 className="flex items-center gap-2"
               >
                 <Trash className="w-4 h-4" />

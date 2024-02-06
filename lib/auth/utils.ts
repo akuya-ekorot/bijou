@@ -1,17 +1,17 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { DefaultSession, NextAuthOptions, getServerSession } from "next-auth";
-import { Adapter } from "next-auth/adapters";
-import Google from "next-auth/providers/google";
-import { redirect } from "next/navigation";
-import { db } from "../db";
-import { env } from "../env.mjs";
-import Email from "next-auth/providers/email";
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { DefaultSession, NextAuthOptions, getServerSession } from 'next-auth';
+import { Adapter } from 'next-auth/adapters';
+import Google from 'next-auth/providers/google';
+import { redirect } from 'next/navigation';
+import { db } from '../db';
+import { env } from '../env.mjs';
+import Email from 'next-auth/providers/email';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 }
 
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
   },
   providers,
   session: {
-    strategy: "database",
+    strategy: 'database',
   },
 };
 
@@ -58,5 +58,5 @@ export const getUserAuth = async () => {
 
 export const checkAuth = async () => {
   const { session } = await getUserAuth();
-  if (!session) redirect("/auth");
+  if (!session) redirect('/auth');
 };

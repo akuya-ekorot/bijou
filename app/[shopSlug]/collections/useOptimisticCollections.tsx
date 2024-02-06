@@ -1,11 +1,11 @@
 import {
   type Collection,
   type CompleteCollection,
-} from "@/lib/db/schema/collections";
-import { TImage } from "@/lib/db/schema/images";
-import { Product } from "@/lib/db/schema/products";
-import { OptimisticAction } from "@/lib/utils";
-import { useOptimistic } from "react";
+} from '@/lib/db/schema/collections';
+import { TImage } from '@/lib/db/schema/images';
+import { Product } from '@/lib/db/schema/products';
+import { OptimisticAction } from '@/lib/utils';
+import { useOptimistic } from 'react';
 
 export type TAddOptimistic = (
   action: OptimisticAction<CompleteCollection>,
@@ -22,21 +22,21 @@ export const useOptimisticCollections = (collections: CompleteCollection[]) => {
 
       const optimisticCollection = {
         ...data,
-        id: "optimistic",
+        id: 'optimistic',
       };
 
       switch (action.action) {
-        case "create":
+        case 'create':
           return currentState.length === 0
             ? [optimisticCollection]
             : [...currentState, optimisticCollection];
-        case "update":
+        case 'update':
           return currentState.map((item) =>
             item.id === data.id ? { ...item, ...optimisticCollection } : item,
           );
-        case "delete":
+        case 'delete':
           return currentState.map((item) =>
-            item.id === data.id ? { ...item, id: "delete" } : item,
+            item.id === data.id ? { ...item, id: 'delete' } : item,
           );
         default:
           return currentState;

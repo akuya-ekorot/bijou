@@ -1,24 +1,20 @@
-import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
+import { createShop, deleteShop, updateShop } from '@/lib/api/shops/mutations';
 import {
-  createShop,
-  deleteShop,
-  updateShop,
-} from "@/lib/api/shops/mutations";
-import { 
   shopIdSchema,
   insertShopParams,
-  updateShopParams 
-} from "@/lib/db/schema/shops";
+  updateShopParams,
+} from '@/lib/db/schema/shops';
 
 export async function POST(req: Request) {
   try {
     const validatedData = insertShopParams.parse(await req.json());
     const { shop } = await createShop(validatedData);
 
-    revalidatePath("/shops"); // optional - assumes you will have named route same as entity
+    revalidatePath('/shops'); // optional - assumes you will have named route same as entity
 
     return NextResponse.json(shop, { status: 201 });
   } catch (err) {
@@ -30,11 +26,10 @@ export async function POST(req: Request) {
   }
 }
 
-
 export async function PUT(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const id = searchParams.get('id');
 
     const validatedData = updateShopParams.parse(await req.json());
     const validatedParams = shopIdSchema.parse({ id });
@@ -54,7 +49,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const id = searchParams.get('id');
 
     const validatedParams = shopIdSchema.parse({ id });
     const { shop } = await deleteShop(validatedParams.id);

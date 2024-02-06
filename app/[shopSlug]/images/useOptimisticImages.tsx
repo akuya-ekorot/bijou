@@ -1,6 +1,6 @@
-import { type TImage, type CompleteImage } from "@/lib/db/schema/images";
-import { OptimisticAction } from "@/lib/utils";
-import { useOptimistic } from "react";
+import { type TImage, type CompleteImage } from '@/lib/db/schema/images';
+import { OptimisticAction } from '@/lib/utils';
+import { useOptimistic } from 'react';
 
 export type TAddOptimistic = (action: OptimisticAction<TImage>) => void;
 
@@ -16,21 +16,21 @@ export const useOptimisticImages = (images: CompleteImage[]) => {
       const optimisticImage = {
         ...data,
 
-        id: "optimistic",
+        id: 'optimistic',
       };
 
       switch (action.action) {
-        case "create":
+        case 'create':
           return currentState.length === 0
             ? [optimisticImage]
             : [...currentState, optimisticImage];
-        case "update":
+        case 'update':
           return currentState.map((item) =>
             item.id === data.id ? { ...item, ...optimisticImage } : item,
           );
-        case "delete":
+        case 'delete':
           return currentState.map((item) =>
-            item.id === data.id ? { ...item, id: "delete" } : item,
+            item.id === data.id ? { ...item, id: 'delete' } : item,
           );
         default:
           return currentState;

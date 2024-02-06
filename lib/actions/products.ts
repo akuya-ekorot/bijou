@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   createProduct,
   deleteProduct,
   updateProduct,
-} from "@/lib/api/products/mutations";
+} from '@/lib/api/products/mutations';
 import {
   ProductId,
   NewProductParams,
@@ -13,19 +13,19 @@ import {
   productIdSchema,
   insertProductParams,
   updateProductParams,
-} from "@/lib/db/schema/products";
+} from '@/lib/db/schema/products';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateProducts = () => revalidatePath("/products");
+const revalidateProducts = () => revalidatePath('/products');
 
 export const createProductAction = async (input: NewProductParams) => {
   try {
@@ -58,4 +58,3 @@ export const deleteProductAction = async (input: ProductId) => {
     return handleErrors(e);
   }
 };
-

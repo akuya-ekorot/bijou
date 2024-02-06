@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { type TImage, CompleteImage } from "@/lib/db/schema/images";
-import Modal from "@/components/shared/Modal";
+import { cn } from '@/lib/utils';
+import { type TImage, CompleteImage } from '@/lib/db/schema/images';
+import Modal from '@/components/shared/Modal';
 
-import { useOptimisticImages } from "@/app/[shopSlug]/images/useOptimisticImages";
-import { Button } from "@/components/ui/button";
-import ImageForm from "./ImageForm";
-import { PlusIcon } from "lucide-react";
-import { useParams } from "next/navigation";
-import Image from "next/image";
+import { useOptimisticImages } from '@/app/[shopSlug]/images/useOptimisticImages';
+import { Button } from '@/components/ui/button';
+import ImageForm from './ImageForm';
+import { PlusIcon } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 type TOpenModal = (image?: TImage) => void;
 
@@ -31,7 +31,7 @@ export default function ImageList({ images }: { images: CompleteImage[] }) {
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeImage ? "Edit Image" : "Create Images"}
+        title={activeImage ? 'Edit Image' : 'Create Images'}
       >
         <ImageForm
           image={activeImage}
@@ -41,7 +41,7 @@ export default function ImageList({ images }: { images: CompleteImage[] }) {
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -79,17 +79,17 @@ const ImageItem = ({
   image: CompleteImage;
   openModal: TOpenModal;
 }) => {
-  const optimistic = image.id === "optimistic";
-  const deleting = image.id === "delete";
+  const optimistic = image.id === 'optimistic';
+  const deleting = image.id === 'delete';
   const mutating = optimistic || deleting;
   const params = useParams();
 
   return (
     <li
       className={cn(
-        "flex flex-col",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex flex-col',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
@@ -101,7 +101,7 @@ const ImageItem = ({
           width={280}
         />
       </div>
-      <Button variant={"link"} asChild>
+      <Button variant={'link'} asChild>
         <Link href={`/${params.shopSlug}/images/` + image.id}>Edit</Link>
       </Button>
     </li>
@@ -119,7 +119,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Images{" "}
+          <PlusIcon className="h-4" /> New Images{' '}
         </Button>
       </div>
     </div>

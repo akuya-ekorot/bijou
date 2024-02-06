@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { type Order, CompleteOrder } from "@/lib/db/schema/orders";
-import Modal from "@/components/shared/Modal";
-import { type Customer } from "@/lib/db/schema/customers";
-import { type Payment } from "@/lib/db/schema/payments";
-import { useOptimisticOrders } from "@/app/orders/useOptimisticOrders";
-import { Button } from "@/components/ui/button";
-import OrderForm from "./OrderForm";
-import { PlusIcon } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { type Order, CompleteOrder } from '@/lib/db/schema/orders';
+import Modal from '@/components/shared/Modal';
+import { type Customer } from '@/lib/db/schema/customers';
+import { type Payment } from '@/lib/db/schema/payments';
+import { useOptimisticOrders } from '@/app/orders/useOptimisticOrders';
+import { Button } from '@/components/ui/button';
+import OrderForm from './OrderForm';
+import { PlusIcon } from 'lucide-react';
 
 type TOpenModal = (order?: Order) => void;
 
@@ -42,7 +42,7 @@ export default function OrderList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeOrder ? "Edit Order" : "Create Orders"}
+        title={activeOrder ? 'Edit Order' : 'Create Orders'}
       >
         <OrderForm
           order={activeOrder}
@@ -54,7 +54,7 @@ export default function OrderList({
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -78,22 +78,22 @@ const Order = ({
   order: CompleteOrder;
   openModal: TOpenModal;
 }) => {
-  const optimistic = order.order.id === "optimistic";
-  const deleting = order.order.id === "delete";
+  const optimistic = order.order.id === 'optimistic';
+  const deleting = order.order.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex justify-between my-2',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
         <div>{order.order.customerId}</div>
       </div>
-      <Button variant={"link"} asChild>
-        <Link href={"/orders/" + order.order.id}>Edit</Link>
+      <Button variant={'link'} asChild>
+        <Link href={'/orders/' + order.order.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -110,7 +110,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Orders{" "}
+          <PlusIcon className="h-4" /> New Orders{' '}
         </Button>
       </div>
     </div>

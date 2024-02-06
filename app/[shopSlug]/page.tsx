@@ -1,11 +1,11 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { getShopBySlug } from "@/lib/api/shops/queries";
-import { checkAuth } from "@/lib/auth/utils";
-import OptimisticShop from "../../components/shops/OptimisticShop";
+import { getShopBySlug } from '@/lib/api/shops/queries';
+import { checkAuth } from '@/lib/auth/utils';
+import OptimisticShop from '../../components/shops/OptimisticShop';
 
-import Loading from "@/app/loading";
+import Loading from '@/app/loading';
 
 export const revalidate = 0;
 

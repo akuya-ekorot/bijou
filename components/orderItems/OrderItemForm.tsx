@@ -1,37 +1,37 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/[shopSlug]/order-items/useOptimisticOrderItems";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/[shopSlug]/order-items/useOptimisticOrderItems';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 import {
   type OrderItem,
   insertOrderItemParams,
-} from "@/lib/db/schema/orderItems";
+} from '@/lib/db/schema/orderItems';
 import {
   createOrderItemAction,
   deleteOrderItemAction,
   updateOrderItemAction,
-} from "@/lib/actions/orderItems";
-import { type Order } from "@/lib/db/schema/orders";
-import { type Product } from "@/lib/db/schema/products";
-import { type Shop } from "@/lib/db/schema/shops";
+} from '@/lib/actions/orderItems';
+import { type Order } from '@/lib/db/schema/orders';
+import { type Product } from '@/lib/db/schema/products';
+import { type Shop } from '@/lib/db/schema/shops';
 
 const OrderItemForm = ({
   orders,
@@ -75,9 +75,9 @@ const OrderItemForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `OrderItem ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `OrderItem ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -96,8 +96,8 @@ const OrderItemForm = ({
     const pendingOrderItem: OrderItem = {
       updatedAt: orderItem?.updatedAt ?? new Date(),
       createdAt: orderItem?.createdAt ?? new Date(),
-      id: orderItem?.id ?? "",
-      userId: orderItem?.userId ?? "",
+      id: orderItem?.id ?? '',
+      userId: orderItem?.userId ?? '',
       ...values,
     };
     try {
@@ -105,7 +105,7 @@ const OrderItemForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingOrderItem,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const error = editing
@@ -113,11 +113,11 @@ const OrderItemForm = ({
           : await createOrderItemAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingOrderItem,
         };
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -129,21 +129,21 @@ const OrderItemForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange} className={'space-y-8'}>
       {/* Schema fields start */}
 
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.orderId ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.orderId ? 'text-destructive' : '',
           )}
         >
           Order
         </Label>
         <Select defaultValue={orderItem?.orderId} name="orderId">
           <SelectTrigger
-            className={cn(errors?.orderId ? "ring ring-destructive" : "")}
+            className={cn(errors?.orderId ? 'ring ring-destructive' : '')}
           >
             <SelectValue placeholder="Select a order" />
           </SelectTrigger>
@@ -166,15 +166,15 @@ const OrderItemForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.productId ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.productId ? 'text-destructive' : '',
           )}
         >
           Product
         </Label>
         <Select defaultValue={orderItem?.productId} name="productId">
           <SelectTrigger
-            className={cn(errors?.productId ? "ring ring-destructive" : "")}
+            className={cn(errors?.productId ? 'ring ring-destructive' : '')}
           >
             <SelectValue placeholder="Select a product" />
           </SelectTrigger>
@@ -197,15 +197,15 @@ const OrderItemForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.shopId ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.shopId ? 'text-destructive' : '',
           )}
         >
           Shop
         </Label>
         <Select defaultValue={orderItem?.shopId} name="shopId">
           <SelectTrigger
-            className={cn(errors?.shopId ? "ring ring-destructive" : "")}
+            className={cn(errors?.shopId ? 'ring ring-destructive' : '')}
           >
             <SelectValue placeholder="Select a shop" />
           </SelectTrigger>
@@ -234,26 +234,26 @@ const OrderItemForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
-                addOptimistic({ action: "delete", data: orderItem });
+                addOptimistic({ action: 'delete', data: orderItem });
               const error = await deleteOrderItemAction(orderItem.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: orderItem,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/order-items");
+            router.push('/order-items');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -280,8 +280,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/[shopSlug]/order-items/useOptimisticOrderItems";
-import { type OrderItem } from "@/lib/db/schema/orderItems";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/[shopSlug]/order-items/useOptimisticOrderItems';
+import { type OrderItem } from '@/lib/db/schema/orderItems';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import OrderItemForm from "@/components/orderItems/OrderItemForm";
-import { type Order } from "@/lib/db/schema/orders";
-import { type Product } from "@/lib/db/schema/products";
-import { type Shop } from "@/lib/db/schema/shops";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import OrderItemForm from '@/components/orderItems/OrderItemForm';
+import { type Order } from '@/lib/db/schema/orders';
+import { type Product } from '@/lib/db/schema/products';
+import { type Shop } from '@/lib/db/schema/shops';
 
 export default function OptimisticOrderItem({
   orderItem,
@@ -55,8 +55,8 @@ export default function OptimisticOrderItem({
       </div>
       <pre
         className={cn(
-          "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticOrderItem.id === "optimistic" ? "animate-pulse" : "",
+          'bg-secondary p-4 rounded-lg break-all text-wrap',
+          optimisticOrderItem.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         {JSON.stringify(optimisticOrderItem, null, 2)}

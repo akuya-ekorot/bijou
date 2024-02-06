@@ -1,38 +1,38 @@
-import { sql } from "drizzle-orm";
+import { sql } from 'drizzle-orm';
 import {
   varchar,
   timestamp,
   pgTable,
   integer,
   serial,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-import { collections } from "./collections";
-import { images } from "./images";
-import { users } from "@/lib/db/schema/auth";
-import { type getCollectionImages } from "@/lib/api/collectionImages/queries";
+} from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
+import { collections } from './collections';
+import { images } from './images';
+import { users } from '@/lib/db/schema/auth';
+import { type getCollectionImages } from '@/lib/api/collectionImages/queries';
 
-import { nanoid, timestamps } from "@/lib/utils";
+import { nanoid, timestamps } from '@/lib/utils';
 
-export const collectionImages = pgTable("collection_images", {
-  id: varchar("id", { length: 191 })
+export const collectionImages = pgTable('collection_images', {
+  id: varchar('id', { length: 191 })
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  order: integer("order").notNull().default(0),
-  collectionId: varchar("collection_id", { length: 256 })
-    .references(() => collections.id, { onDelete: "cascade" })
+  order: integer('order').notNull().default(0),
+  collectionId: varchar('collection_id', { length: 256 })
+    .references(() => collections.id, { onDelete: 'cascade' })
     .notNull(),
-  imageId: varchar("image_id", { length: 256 })
-    .references(() => images.id, { onDelete: "cascade" })
+  imageId: varchar('image_id', { length: 256 })
+    .references(() => images.id, { onDelete: 'cascade' })
     .notNull(),
-  userId: varchar("user_id", { length: 256 })
-    .references(() => users.id, { onDelete: "cascade" })
+  userId: varchar('user_id', { length: 256 })
+    .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  createdAt: timestamp("created_at")
+  createdAt: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp('updated_at')
     .notNull()
     .default(sql`now()`),
 });
@@ -72,9 +72,9 @@ export type NewCollectionImageParams = z.infer<
 export type UpdateCollectionImageParams = z.infer<
   typeof updateCollectionImageParams
 >;
-export type CollectionImageId = z.infer<typeof collectionImageIdSchema>["id"];
+export type CollectionImageId = z.infer<typeof collectionImageIdSchema>['id'];
 
 // this type infers the return from getCollectionImages() - meaning it will include any joins
 export type CompleteCollectionImage = Awaited<
   ReturnType<typeof getCollectionImages>
->["collectionImages"][number];
+>['collectionImages'][number];

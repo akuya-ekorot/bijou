@@ -1,41 +1,41 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/orders/useOptimisticOrders";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/orders/useOptimisticOrders';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+} from '@/components/ui/popover';
+import { CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { format } from 'date-fns';
 
-import { type Order, insertOrderParams } from "@/lib/db/schema/orders";
+import { type Order, insertOrderParams } from '@/lib/db/schema/orders';
 import {
   createOrderAction,
   deleteOrderAction,
   updateOrderAction,
-} from "@/lib/actions/orders";
-import { type Customer } from "@/lib/db/schema/customers";
-import { type Payment } from "@/lib/db/schema/payments";
+} from '@/lib/actions/orders';
+import { type Customer } from '@/lib/db/schema/customers';
+import { type Payment } from '@/lib/db/schema/payments';
 
 const OrderForm = ({
   customers,
@@ -78,9 +78,9 @@ const OrderForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Order ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Order ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -99,8 +99,8 @@ const OrderForm = ({
     const pendingOrder: Order = {
       updatedAt: order?.updatedAt ?? new Date(),
       createdAt: order?.createdAt ?? new Date(),
-      id: order?.id ?? "",
-      userId: order?.userId ?? "",
+      id: order?.id ?? '',
+      userId: order?.userId ?? '',
       ...values,
       paidAt: new Date(orderParsed.data.paidAt),
     };
@@ -109,7 +109,7 @@ const OrderForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingOrder,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const error = editing
@@ -117,11 +117,11 @@ const OrderForm = ({
           : await createOrderAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingOrder,
         };
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -133,21 +133,21 @@ const OrderForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange} className={'space-y-8'}>
       {/* Schema fields start */}
 
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.customerId ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.customerId ? 'text-destructive' : '',
           )}
         >
           Customer
         </Label>
         <Select defaultValue={order?.customerId} name="customerId">
           <SelectTrigger
-            className={cn(errors?.customerId ? "ring ring-destructive" : "")}
+            className={cn(errors?.customerId ? 'ring ring-destructive' : '')}
           >
             <SelectValue placeholder="Select a customer" />
           </SelectTrigger>
@@ -171,8 +171,8 @@ const OrderForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.paidAt ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.paidAt ? 'text-destructive' : '',
           )}
         >
           Paid At
@@ -189,14 +189,14 @@ const OrderForm = ({
 
           <PopoverTrigger asChild>
             <Button
-              variant={"outline"}
+              variant={'outline'}
               className={cn(
-                "w-[240px] pl-3 text-left font-normal",
-                !order?.paidAt && "text-muted-foreground",
+                'w-[240px] pl-3 text-left font-normal',
+                !order?.paidAt && 'text-muted-foreground',
               )}
             >
               {paidAt ? (
-                <span>{format(paidAt, "PPP")}</span>
+                <span>{format(paidAt, 'PPP')}</span>
               ) : (
                 <span>Pick a date</span>
               )}
@@ -209,7 +209,7 @@ const OrderForm = ({
               onSelect={(e) => setPaidAt(e)}
               selected={paidAt}
               disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
+                date > new Date() || date < new Date('1900-01-01')
               }
               initialFocus
             />
@@ -224,8 +224,8 @@ const OrderForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.status ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.status ? 'text-destructive' : '',
           )}
         >
           Status
@@ -233,8 +233,8 @@ const OrderForm = ({
         <Input
           type="text"
           name="status"
-          className={cn(errors?.status ? "ring ring-destructive" : "")}
-          defaultValue={order?.status ?? ""}
+          className={cn(errors?.status ? 'ring ring-destructive' : '')}
+          defaultValue={order?.status ?? ''}
         />
         {errors?.status ? (
           <p className="text-xs text-destructive mt-2">{errors.status[0]}</p>
@@ -245,8 +245,8 @@ const OrderForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.amount ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.amount ? 'text-destructive' : '',
           )}
         >
           Amount
@@ -254,8 +254,8 @@ const OrderForm = ({
         <Input
           type="text"
           name="amount"
-          className={cn(errors?.amount ? "ring ring-destructive" : "")}
-          defaultValue={order?.amount ?? ""}
+          className={cn(errors?.amount ? 'ring ring-destructive' : '')}
+          defaultValue={order?.amount ?? ''}
         />
         {errors?.amount ? (
           <p className="text-xs text-destructive mt-2">{errors.amount[0]}</p>
@@ -267,15 +267,15 @@ const OrderForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.paymentId ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.paymentId ? 'text-destructive' : '',
           )}
         >
           Payment
         </Label>
         <Select defaultValue={order?.paymentId} name="paymentId">
           <SelectTrigger
-            className={cn(errors?.paymentId ? "ring ring-destructive" : "")}
+            className={cn(errors?.paymentId ? 'ring ring-destructive' : '')}
           >
             <SelectValue placeholder="Select a payment" />
           </SelectTrigger>
@@ -304,25 +304,25 @@ const OrderForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: order });
+              addOptimistic && addOptimistic({ action: 'delete', data: order });
               const error = await deleteOrderAction(order.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: order,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/orders");
+            router.push('/orders');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -349,8 +349,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

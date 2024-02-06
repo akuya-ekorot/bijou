@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-import { checkAuth } from "@/lib/auth/utils";
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import { checkAuth } from '@/lib/auth/utils';
 
 export default async function Layout({
   children,

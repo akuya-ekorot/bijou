@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/[shopSlug]/customers/useOptimisticCustomers";
-import { type Customer } from "@/lib/db/schema/customers";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/[shopSlug]/customers/useOptimisticCustomers';
+import { type Customer } from '@/lib/db/schema/customers';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import CustomerForm from "@/components/customers/CustomerForm";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import CustomerForm from '@/components/customers/CustomerForm';
 
 export default function OptimisticCustomer({
   customer,
@@ -41,8 +41,8 @@ export default function OptimisticCustomer({
       </div>
       <pre
         className={cn(
-          "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticCustomer.id === "optimistic" ? "animate-pulse" : "",
+          'bg-secondary p-4 rounded-lg break-all text-wrap',
+          optimisticCustomer.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         {JSON.stringify(optimisticCustomer, null, 2)}

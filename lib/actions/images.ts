@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   createImage,
   deleteImage,
   updateImage,
-} from "@/lib/api/images/mutations";
+} from '@/lib/api/images/mutations';
 import {
   ImageId,
   NewImageParams,
@@ -13,19 +13,19 @@ import {
   imageIdSchema,
   insertImageParams,
   updateImageParams,
-} from "@/lib/db/schema/images";
+} from '@/lib/db/schema/images';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateImages = () => revalidatePath("/images");
+const revalidateImages = () => revalidatePath('/images');
 
 export const createImageAction = async (input: NewImageParams) => {
   try {
@@ -58,4 +58,3 @@ export const deleteImageAction = async (input: ImageId) => {
     return handleErrors(e);
   }
 };
-

@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   createProductImage,
   deleteProductImage,
   updateProductImage,
-} from "@/lib/api/productImages/mutations";
+} from '@/lib/api/productImages/mutations';
 import {
   ProductImageId,
   NewProductImageParams,
@@ -13,21 +13,23 @@ import {
   productImageIdSchema,
   insertProductImageParams,
   updateProductImageParams,
-} from "@/lib/db/schema/productImages";
+} from '@/lib/db/schema/productImages';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateProductImages = () => revalidatePath("/product-images");
+const revalidateProductImages = () => revalidatePath('/product-images');
 
-export const createProductImageAction = async (input: NewProductImageParams) => {
+export const createProductImageAction = async (
+  input: NewProductImageParams,
+) => {
   try {
     const payload = insertProductImageParams.parse(input);
     await createProductImage(payload);
@@ -37,7 +39,9 @@ export const createProductImageAction = async (input: NewProductImageParams) => 
   }
 };
 
-export const updateProductImageAction = async (input: UpdateProductImageParams) => {
+export const updateProductImageAction = async (
+  input: UpdateProductImageParams,
+) => {
   try {
     const payload = updateProductImageParams.parse(input);
     await updateProductImage(payload.id, payload);

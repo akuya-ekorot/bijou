@@ -1,14 +1,14 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-import { getCustomerById } from "@/lib/api/customers/queries";
-import OptimisticCustomer from "./OptimisticCustomer";
-import { checkAuth } from "@/lib/auth/utils";
+import { getCustomerById } from '@/lib/api/customers/queries';
+import OptimisticCustomer from './OptimisticCustomer';
+import { checkAuth } from '@/lib/auth/utils';
 
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import Loading from "@/app/loading";
+import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon } from 'lucide-react';
+import Loading from '@/app/loading';
 
 export const revalidate = 0;
 

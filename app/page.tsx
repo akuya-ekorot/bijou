@@ -1,10 +1,10 @@
-import ShopList from "@/components/shops/ShopList";
-import { getShops } from "@/lib/api/shops/queries";
-import { checkAuth } from "@/lib/auth/utils";
-import { Suspense } from "react";
-import Loading from "./loading";
-import CreateShop from "@/components/shops/CreteShop";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import ShopList from '@/components/shops/ShopList';
+import { getShops } from '@/lib/api/shops/queries';
+import { checkAuth } from '@/lib/auth/utils';
+import { Suspense } from 'react';
+import Loading from './loading';
+import CreateShop from '@/components/shops/CreteShop';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default async function ShopsPage() {
   await checkAuth();
@@ -17,7 +17,7 @@ export default async function ShopsPage() {
       <div className="relative flex flex-col items-center pt-24">
         <div className="flex justify-between">
           <h1 className="font-semibold text-2xl my-2">
-            {hasShops ? "Pick shop" : "Create shops"}
+            {hasShops ? 'Pick shop' : 'Create shops'}
           </h1>
         </div>
         <div className="w-full max-w-xl">

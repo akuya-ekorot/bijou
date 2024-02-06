@@ -1,16 +1,16 @@
-import { db } from "@/lib/db/index";
-import { eq, and } from "drizzle-orm";
-import { getUserAuth } from "@/lib/auth/utils";
+import { db } from '@/lib/db/index';
+import { eq, and } from 'drizzle-orm';
+import { getUserAuth } from '@/lib/auth/utils';
 import {
   type CollectionId,
   collectionIdSchema,
   collections,
   Collection,
-} from "@/lib/db/schema/collections";
-import { collectionImages } from "@/lib/db/schema/collectionImages";
-import { TImage, images } from "@/lib/db/schema/images";
-import { Product, products } from "@/lib/db/schema/products";
-import { collectionProducts } from "@/lib/db/schema/collectionProducts";
+} from '@/lib/db/schema/collections';
+import { collectionImages } from '@/lib/db/schema/collectionImages';
+import { TImage, images } from '@/lib/db/schema/images';
+import { Product, products } from '@/lib/db/schema/products';
+import { collectionProducts } from '@/lib/db/schema/collectionProducts';
 
 const formatCollection = (
   c: {

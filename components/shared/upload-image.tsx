@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { useState } from "react";
-import { Input } from "../ui/input";
-import { ScrollArea } from "../ui/scroll-area";
-import { cn } from "@/lib/utils";
+import Image from 'next/image';
+import { useState } from 'react';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 export default function UploadImage({
   multiple,
@@ -45,15 +45,15 @@ export default function UploadImage({
   return (
     <div className="space-y-2">
       <ScrollArea className="w-full max-w-sm h-40 border">
-        <div className={cn(multiple ? "grid grid-cols-3 gap-1 p-1" : "")}>
+        <div className={cn(multiple ? 'grid grid-cols-3 gap-1 p-1' : '')}>
           {imagesPreview.map((image) => (
             <Image
               key={image}
               src={image}
               alt="preview"
               className={cn(
-                "border rounded overflow-hidden object-cover",
-                multiple ? "h-16 w-full" : "w-full h-40",
+                'border rounded overflow-hidden object-cover',
+                multiple ? 'h-16 w-full' : 'w-full h-40',
               )}
               height={160}
               width={384}

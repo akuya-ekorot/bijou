@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { type Payment, CompletePayment } from "@/lib/db/schema/payments";
-import Modal from "@/components/shared/Modal";
+import { cn } from '@/lib/utils';
+import { type Payment, CompletePayment } from '@/lib/db/schema/payments';
+import Modal from '@/components/shared/Modal';
 
-import { useOptimisticPayments } from "@/app/[shopSlug]/payments/useOptimisticPayments";
-import { Button } from "@/components/ui/button";
-import PaymentForm from "./PaymentForm";
-import { PlusIcon } from "lucide-react";
+import { useOptimisticPayments } from '@/app/[shopSlug]/payments/useOptimisticPayments';
+import { Button } from '@/components/ui/button';
+import PaymentForm from './PaymentForm';
+import { PlusIcon } from 'lucide-react';
 
 type TOpenModal = (payment?: Payment) => void;
 
@@ -34,7 +34,7 @@ export default function PaymentList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activePayment ? "Edit Payment" : "Create Payments"}
+        title={activePayment ? 'Edit Payment' : 'Create Payments'}
       >
         <PaymentForm
           payment={activePayment}
@@ -44,7 +44,7 @@ export default function PaymentList({
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -68,22 +68,22 @@ const Payment = ({
   payment: CompletePayment;
   openModal: TOpenModal;
 }) => {
-  const optimistic = payment.id === "optimistic";
-  const deleting = payment.id === "delete";
+  const optimistic = payment.id === 'optimistic';
+  const deleting = payment.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex justify-between my-2',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
         <div>{payment.status}</div>
       </div>
-      <Button variant={"link"} asChild>
-        <Link href={"/payments/" + payment.id}>Edit</Link>
+      <Button variant={'link'} asChild>
+        <Link href={'/payments/' + payment.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -100,7 +100,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Payments{" "}
+          <PlusIcon className="h-4" /> New Payments{' '}
         </Button>
       </div>
     </div>

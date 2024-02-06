@@ -1,12 +1,12 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import Loading from "@/app/loading";
-import OrderItemList from "@/components/orderItems/OrderItemList";
-import { getOrderItems } from "@/lib/api/orderItems/queries";
-import { getOrders } from "@/lib/api/orders/queries";
-import { getProducts } from "@/lib/api/products/queries";
-import { getShops } from "@/lib/api/shops/queries";
-import { checkAuth } from "@/lib/auth/utils";
+import Loading from '@/app/loading';
+import OrderItemList from '@/components/orderItems/OrderItemList';
+import { getOrderItems } from '@/lib/api/orderItems/queries';
+import { getOrders } from '@/lib/api/orders/queries';
+import { getProducts } from '@/lib/api/products/queries';
+import { getShops } from '@/lib/api/shops/queries';
+import { checkAuth } from '@/lib/auth/utils';
 
 export const revalidate = 0;
 

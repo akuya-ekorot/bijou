@@ -1,24 +1,24 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/[shopSlug]/customers/useOptimisticCustomers";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/[shopSlug]/customers/useOptimisticCustomers';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
-import { type Customer, insertCustomerParams } from "@/lib/db/schema/customers";
+import { type Customer, insertCustomerParams } from '@/lib/db/schema/customers';
 import {
   createCustomerAction,
   deleteCustomerAction,
   updateCustomerAction,
-} from "@/lib/actions/customers";
+} from '@/lib/actions/customers';
 
 const CustomerForm = ({
   customer,
@@ -57,9 +57,9 @@ const CustomerForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Customer ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Customer ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -78,8 +78,8 @@ const CustomerForm = ({
     const pendingCustomer: Customer = {
       updatedAt: customer?.updatedAt ?? new Date(),
       createdAt: customer?.createdAt ?? new Date(),
-      id: customer?.id ?? "",
-      userId: customer?.userId ?? "",
+      id: customer?.id ?? '',
+      userId: customer?.userId ?? '',
       ...values,
     };
     try {
@@ -87,7 +87,7 @@ const CustomerForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingCustomer,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const error = editing
@@ -95,11 +95,11 @@ const CustomerForm = ({
           : await createCustomerAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingCustomer,
         };
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -111,13 +111,13 @@ const CustomerForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange} className={'space-y-8'}>
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.name ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.name ? 'text-destructive' : '',
           )}
         >
           Name
@@ -125,8 +125,8 @@ const CustomerForm = ({
         <Input
           type="text"
           name="name"
-          className={cn(errors?.name ? "ring ring-destructive" : "")}
-          defaultValue={customer?.name ?? ""}
+          className={cn(errors?.name ? 'ring ring-destructive' : '')}
+          defaultValue={customer?.name ?? ''}
         />
         {errors?.name ? (
           <p className="text-xs text-destructive mt-2">{errors.name[0]}</p>
@@ -137,8 +137,8 @@ const CustomerForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.email ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.email ? 'text-destructive' : '',
           )}
         >
           Email
@@ -146,8 +146,8 @@ const CustomerForm = ({
         <Input
           type="text"
           name="email"
-          className={cn(errors?.email ? "ring ring-destructive" : "")}
-          defaultValue={customer?.email ?? ""}
+          className={cn(errors?.email ? 'ring ring-destructive' : '')}
+          defaultValue={customer?.email ?? ''}
         />
         {errors?.email ? (
           <p className="text-xs text-destructive mt-2">{errors.email[0]}</p>
@@ -158,8 +158,8 @@ const CustomerForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.phone ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.phone ? 'text-destructive' : '',
           )}
         >
           Phone
@@ -167,8 +167,8 @@ const CustomerForm = ({
         <Input
           type="text"
           name="phone"
-          className={cn(errors?.phone ? "ring ring-destructive" : "")}
-          defaultValue={customer?.phone ?? ""}
+          className={cn(errors?.phone ? 'ring ring-destructive' : '')}
+          defaultValue={customer?.phone ?? ''}
         />
         {errors?.phone ? (
           <p className="text-xs text-destructive mt-2">{errors.phone[0]}</p>
@@ -179,8 +179,8 @@ const CustomerForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.address ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.address ? 'text-destructive' : '',
           )}
         >
           Address
@@ -188,8 +188,8 @@ const CustomerForm = ({
         <Input
           type="text"
           name="address"
-          className={cn(errors?.address ? "ring ring-destructive" : "")}
-          defaultValue={customer?.address ?? ""}
+          className={cn(errors?.address ? 'ring ring-destructive' : '')}
+          defaultValue={customer?.address ?? ''}
         />
         {errors?.address ? (
           <p className="text-xs text-destructive mt-2">{errors.address[0]}</p>
@@ -207,26 +207,26 @@ const CustomerForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
-                addOptimistic({ action: "delete", data: customer });
+                addOptimistic({ action: 'delete', data: customer });
               const error = await deleteCustomerAction(customer.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: customer,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/customers");
+            router.push('/customers');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -253,8 +253,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

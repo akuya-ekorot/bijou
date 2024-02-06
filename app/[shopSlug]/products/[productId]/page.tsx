@@ -1,15 +1,15 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-import { getProductById } from "@/lib/api/products/queries";
-import OptimisticProduct from "./OptimisticProduct";
-import { checkAuth } from "@/lib/auth/utils";
+import { getProductById } from '@/lib/api/products/queries';
+import OptimisticProduct from './OptimisticProduct';
+import { checkAuth } from '@/lib/auth/utils';
 
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import Loading from "@/app/loading";
-import { getCollections } from "@/lib/api/collections/queries";
+import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon } from 'lucide-react';
+import Loading from '@/app/loading';
+import { getCollections } from '@/lib/api/collections/queries';
 
 export const revalidate = 0;
 

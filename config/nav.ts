@@ -1,5 +1,5 @@
-import { SidebarLink } from "@/components/SidebarItems";
-import { Cog, Globe, HomeIcon, Image, LibraryBig, Tags } from "lucide-react";
+import { SidebarLink } from '@/components/SidebarItems';
+import { Cog, Globe, HomeIcon, Image, LibraryBig, Tags } from 'lucide-react';
 
 type AdditionalLinks = {
   title?: string;
@@ -7,42 +7,42 @@ type AdditionalLinks = {
 };
 
 export const defaultLinks: SidebarLink[] = [
-  { href: "/", title: "Home", icon: HomeIcon },
-  { href: "/account", title: "Account", icon: Cog },
-  { href: "/settings", title: "Settings", icon: Cog },
+  { href: '/', title: 'Home', icon: HomeIcon },
+  { href: '/account', title: 'Account', icon: Cog },
+  { href: '/settings', title: 'Settings', icon: Cog },
 ];
 
 export const additionalLinks: AdditionalLinks[] = [
   {
-    title: "Entities",
+    title: 'Entities',
     links: [
       {
-        href: "/order-items",
-        title: "Order Items",
+        href: '/order-items',
+        title: 'Order Items',
         icon: Globe,
       },
       {
-        href: "/orders",
-        title: "Orders",
+        href: '/orders',
+        title: 'Orders',
         icon: Globe,
       },
       {
-        href: "/customers",
-        title: "Customers",
+        href: '/customers',
+        title: 'Customers',
         icon: Globe,
       },
       {
-        href: "/payments",
-        title: "Payments",
+        href: '/payments',
+        title: 'Payments',
         icon: Globe,
       },
       {
-        href: "/products",
-        title: "Products",
+        href: '/products',
+        title: 'Products',
         icon: Tags,
       },
-      { href: "/collections", title: "Collections", icon: LibraryBig },
-      { href: "/images", title: "Images", icon: Image },
+      { href: '/collections', title: 'Collections', icon: LibraryBig },
+      { href: '/images', title: 'Images', icon: Image },
     ],
   },
 ];

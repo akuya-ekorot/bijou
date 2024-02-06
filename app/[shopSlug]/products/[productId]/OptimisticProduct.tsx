@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/[shopSlug]/products/useOptimisticProducts";
-import { CompleteProduct } from "@/lib/db/schema/products";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/[shopSlug]/products/useOptimisticProducts';
+import { CompleteProduct } from '@/lib/db/schema/products';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import ProductForm from "@/components/products/ProductForm";
-import { CompleteCollection } from "@/lib/db/schema/collections";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import ProductForm from '@/components/products/ProductForm';
+import { CompleteCollection } from '@/lib/db/schema/collections';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 export default function OptimisticProduct({
   collections,
@@ -48,8 +48,8 @@ export default function OptimisticProduct({
       </div>
       <div
         className={cn(
-          "p-4 rounded-lg",
-          optimisticProduct.id === "optimistic" ? "animate-pulse" : "",
+          'p-4 rounded-lg',
+          optimisticProduct.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         <div className="grid grid-cols-2 gap-4">
@@ -61,9 +61,9 @@ export default function OptimisticProduct({
           <div className="bg-secondary rounded p-4 space-y-2 text-secondary-foreground">
             <h2 className="text-sm font-medium underline">Price</h2>
             <p>
-              {new Intl.NumberFormat("en-KE", {
-                style: "currency",
-                currency: "KES",
+              {new Intl.NumberFormat('en-KE', {
+                style: 'currency',
+                currency: 'KES',
               }).format(optimisticProduct.price ?? 0)}
             </p>
           </div>

@@ -1,17 +1,17 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-import { getOrderItemById } from "@/lib/api/orderItems/queries";
-import { getOrders } from "@/lib/api/orders/queries";
-import { getProducts } from "@/lib/api/products/queries";
-import { getShops } from "@/lib/api/shops/queries";
-import OptimisticOrderItem from "./OptimisticOrderItem";
-import { checkAuth } from "@/lib/auth/utils";
+import { getOrderItemById } from '@/lib/api/orderItems/queries';
+import { getOrders } from '@/lib/api/orders/queries';
+import { getProducts } from '@/lib/api/products/queries';
+import { getShops } from '@/lib/api/shops/queries';
+import OptimisticOrderItem from './OptimisticOrderItem';
+import { checkAuth } from '@/lib/auth/utils';
 
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import Loading from "@/app/loading";
+import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon } from 'lucide-react';
+import Loading from '@/app/loading';
 
 export const revalidate = 0;
 

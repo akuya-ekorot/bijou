@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { defaultLinks, additionalLinks } from "@/config/nav";
+import { cn } from '@/lib/utils';
+import { defaultLinks, additionalLinks } from '@/config/nav';
 
 export interface SidebarLink {
   title: string;
@@ -46,12 +46,12 @@ const SidebarLinkGroup = ({
   shopSlug: string;
 }) => {
   const fullPathname = usePathname();
-  const pathname = `/${fullPathname.split("/")[1] ?? ""}${
-    fullPathname.split("/")[2] ? `/${fullPathname.split("/")[2]}` : ""
+  const pathname = `/${fullPathname.split('/')[1] ?? ''}${
+    fullPathname.split('/')[2] ? `/${fullPathname.split('/')[2]}` : ''
   }`;
 
   return (
-    <div className={border ? "border-border border-t my-8 pt-4" : ""}>
+    <div className={border ? 'border-border border-t my-8 pt-4' : ''}>
       {title ? (
         <h4 className="px-2 mb-2 text-xs uppercase text-muted-foreground tracking-wider">
           {title}
@@ -63,7 +63,7 @@ const SidebarLinkGroup = ({
             <SidebarLink
               link={link}
               active={
-                pathname === `/${shopSlug}${link.href === "/" ? "" : link.href}`
+                pathname === `/${shopSlug}${link.href === '/' ? '' : link.href}`
               }
               shopSlug={shopSlug}
             />
@@ -86,14 +86,14 @@ const SidebarLink = ({
     <Link
       href={`/${shopSlug}${link.href}`}
       className={`group transition-colors p-2 inline-block hover:bg-popover hover:text-primary text-muted-foreground text-xs hover:shadow rounded-md w-full${
-        active ? " text-primary font-semibold" : ""
+        active ? ' text-primary font-semibold' : ''
       }`}
     >
       <div className="flex items-center">
         <div
           className={cn(
-            "opacity-0 left-0 h-6 w-[4px] absolute rounded-r-lg bg-primary",
-            active ? "opacity-100" : "",
+            'opacity-0 left-0 h-6 w-[4px] absolute rounded-r-lg bg-primary',
+            active ? 'opacity-100' : '',
           )}
         />
         <link.icon className="h-3.5 mr-1" />

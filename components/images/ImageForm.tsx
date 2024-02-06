@@ -1,30 +1,30 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/[shopSlug]/images/useOptimisticImages";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/[shopSlug]/images/useOptimisticImages';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 import {
   type TImage,
   insertImageParams,
   insertMultipleImagesParams,
-} from "@/lib/db/schema/images";
+} from '@/lib/db/schema/images';
 import {
   createImageAction,
   deleteImageAction,
   updateImageAction,
-} from "@/lib/actions/images";
-import { supabase } from "@/lib/supabase/client";
-import { upload } from "@/lib/api/upload";
+} from '@/lib/actions/images';
+import { supabase } from '@/lib/supabase/client';
+import { upload } from '@/lib/api/upload';
 
 const ImageForm = ({
   image,
@@ -64,9 +64,9 @@ const ImageForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Image ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Image ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -77,7 +77,7 @@ const ImageForm = ({
     setErrors(null);
 
     if (!images) {
-      setErrors({ url: ["Image is required"] });
+      setErrors({ url: ['Image is required'] });
       return;
     }
 
@@ -85,7 +85,7 @@ const ImageForm = ({
     const { data: uploadData, error: uploadError } = await upload(images);
 
     if (uploadError || !uploadData) {
-      setErrors({ url: [uploadError ?? "error uploading images"] });
+      setErrors({ url: [uploadError ?? 'error uploading images'] });
       return;
     }
 
@@ -95,7 +95,7 @@ const ImageForm = ({
 
     if (!imageParsed.success) {
       console.log(imageParsed.error);
-      setErrors({ url: ["Error parsing image data"] });
+      setErrors({ url: ['Error parsing image data'] });
       return;
     }
 
@@ -107,8 +107,8 @@ const ImageForm = ({
       const pendingImage: TImage = {
         updatedAt: image?.updatedAt ?? new Date(),
         createdAt: image?.createdAt ?? new Date(),
-        id: image?.id ?? "",
-        userId: image?.userId ?? "",
+        id: image?.id ?? '',
+        userId: image?.userId ?? '',
         ...values,
       };
 
@@ -117,7 +117,7 @@ const ImageForm = ({
           addOptimistic &&
             addOptimistic({
               data: pendingImage,
-              action: editing ? "update" : "create",
+              action: editing ? 'update' : 'create',
             });
 
           const { error } = editing
@@ -125,11 +125,11 @@ const ImageForm = ({
             : await createImageAction(values);
 
           const errorFormatted = {
-            error: error ?? "Error",
+            error: error ?? 'Error',
             values: pendingImage,
           };
           onSuccess(
-            editing ? "update" : "create",
+            editing ? 'update' : 'create',
             error ? errorFormatted : undefined,
           );
         });
@@ -149,14 +149,14 @@ const ImageForm = ({
     <form
       action={handleSubmitWrapper}
       onChange={handleChange}
-      className={"space-y-8"}
+      className={'space-y-8'}
     >
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.url ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.url ? 'text-destructive' : '',
           )}
         >
           Url
@@ -165,8 +165,8 @@ const ImageForm = ({
           type="file"
           multiple
           name="url"
-          className={cn(errors?.url ? "ring ring-destructive" : "")}
-          defaultValue={image?.url ?? ""}
+          className={cn(errors?.url ? 'ring ring-destructive' : '')}
+          defaultValue={image?.url ?? ''}
           onChange={(e) => {
             setImages(e.target.files);
           }}
@@ -187,25 +187,25 @@ const ImageForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: image });
+              addOptimistic && addOptimistic({ action: 'delete', data: image });
               const error = await deleteImageAction(image.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: image,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/images");
+            router.push('/images');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -232,8 +232,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

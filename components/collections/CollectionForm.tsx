@@ -1,33 +1,33 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
 
-import { type TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
-import { cn, type Action } from "@/lib/utils";
+import { type TAddOptimistic } from '@/app/[shopSlug]/collections/useOptimisticCollections';
+import { cn, type Action } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-import { createCollectionImageAction } from "@/lib/actions/collectionImages";
+import { createCollectionImageAction } from '@/lib/actions/collectionImages';
 import {
   createCollectionAction,
   deleteCollectionAction,
   updateCollectionAction,
-} from "@/lib/actions/collections";
-import { createImageAction } from "@/lib/actions/images";
-import { getShopBySlug } from "@/lib/api/shops/queries";
-import { upload } from "@/lib/api/upload";
+} from '@/lib/actions/collections';
+import { createImageAction } from '@/lib/actions/images';
+import { getShopBySlug } from '@/lib/api/shops/queries';
+import { upload } from '@/lib/api/upload';
 import {
   CompleteCollection,
   insertCollectionParams,
   type Collection,
-} from "@/lib/db/schema/collections";
-import { insertMultipleImagesParams } from "@/lib/db/schema/images";
+} from '@/lib/db/schema/collections';
+import { insertMultipleImagesParams } from '@/lib/db/schema/images';
 
 const CollectionForm = ({
   collection,
@@ -67,9 +67,9 @@ const CollectionForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Collection ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Collection ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -87,7 +87,7 @@ const CollectionForm = ({
       const { data: uploadData, error: uploadError } = await upload(images);
 
       if (uploadError || !uploadData) {
-        setErrors({ images: [uploadError ?? "error uploading images"] });
+        setErrors({ images: [uploadError ?? 'error uploading images'] });
         return;
       }
 
@@ -97,7 +97,7 @@ const CollectionForm = ({
 
       if (!imageParsed.success) {
         console.log(imageParsed.error);
-        setErrors({ images: ["Error parsing image data"] });
+        setErrors({ images: ['Error parsing image data'] });
         return;
       }
 
@@ -105,7 +105,7 @@ const CollectionForm = ({
         const { error, image } = await createImageAction(parsedImage);
 
         if (error || !image) {
-          setErrors({ images: [error ?? "Error creating image records"] });
+          setErrors({ images: [error ?? 'Error creating image records'] });
           return;
         }
 
@@ -131,8 +131,8 @@ const CollectionForm = ({
     const values = collectionParsed.data;
     const pendingImages = imageIds.map((image) => ({
       ...image,
-      url: "",
-      userId: collection?.userId ?? "",
+      url: '',
+      userId: collection?.userId ?? '',
       updatedAt: collection?.updatedAt ?? new Date(),
       createdAt: collection?.createdAt ?? new Date(),
     }));
@@ -140,8 +140,8 @@ const CollectionForm = ({
     const pendingCollection: CompleteCollection = {
       updatedAt: collection?.updatedAt ?? new Date(),
       createdAt: collection?.createdAt ?? new Date(),
-      id: collection?.id ?? "",
-      userId: collection?.userId ?? "",
+      id: collection?.id ?? '',
+      userId: collection?.userId ?? '',
       images: collection?.images ?? pendingImages,
       products: collection?.products ?? [],
       ...values,
@@ -151,23 +151,23 @@ const CollectionForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingCollection,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const { error, collection: newCollection } = editing
           ? await updateCollectionAction({ ...values, id: collection.id })
           : await createCollectionAction(values);
 
-        console.log("created collection", newCollection);
+        console.log('created collection', newCollection);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingCollection,
         };
 
         if (error || !newCollection) {
           onSuccess(
-            editing ? "update" : "create",
+            editing ? 'update' : 'create',
             error ? errorFormatted : undefined,
           );
           return;
@@ -192,7 +192,7 @@ const CollectionForm = ({
         }
 
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -211,14 +211,14 @@ const CollectionForm = ({
     <form
       action={handleSubmitWrapper}
       onChange={handleChange}
-      className={"space-y-8"}
+      className={'space-y-8'}
     >
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.name ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.name ? 'text-destructive' : '',
           )}
         >
           Name
@@ -226,8 +226,8 @@ const CollectionForm = ({
         <Input
           type="text"
           name="name"
-          className={cn(errors?.name ? "ring ring-destructive" : "")}
-          defaultValue={collection?.name ?? ""}
+          className={cn(errors?.name ? 'ring ring-destructive' : '')}
+          defaultValue={collection?.name ?? ''}
         />
         {errors?.name ? (
           <p className="text-xs text-destructive mt-2">{errors.name[0]}</p>
@@ -239,8 +239,8 @@ const CollectionForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.slug ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.slug ? 'text-destructive' : '',
           )}
         >
           Slug
@@ -248,8 +248,8 @@ const CollectionForm = ({
         <Input
           type="text"
           name="slug"
-          className={cn(errors?.slug ? "ring ring-destructive" : "")}
-          defaultValue={collection?.slug ?? ""}
+          className={cn(errors?.slug ? 'ring ring-destructive' : '')}
+          defaultValue={collection?.slug ?? ''}
         />
         {errors?.slug ? (
           <p className="text-xs text-destructive mt-2">{errors.slug[0]}</p>
@@ -261,8 +261,8 @@ const CollectionForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.description ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.description ? 'text-destructive' : '',
           )}
         >
           Description
@@ -270,8 +270,8 @@ const CollectionForm = ({
         <Input
           type="text"
           name="description"
-          className={cn(errors?.description ? "ring ring-destructive" : "")}
-          defaultValue={collection?.description ?? ""}
+          className={cn(errors?.description ? 'ring ring-destructive' : '')}
+          defaultValue={collection?.description ?? ''}
         />
         {errors?.description ? (
           <p className="text-xs text-destructive mt-2">
@@ -285,8 +285,8 @@ const CollectionForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.images ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.images ? 'text-destructive' : '',
           )}
         >
           Images
@@ -295,7 +295,7 @@ const CollectionForm = ({
           type="file"
           multiple
           name="images"
-          className={cn(errors?.images ? "ring ring-destructive" : "")}
+          className={cn(errors?.images ? 'ring ring-destructive' : '')}
           onChange={(e) => {
             setImages(e.target.files);
           }}
@@ -317,29 +317,29 @@ const CollectionForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
                 addOptimistic({
-                  action: "delete",
+                  action: 'delete',
                   data: { ...collection, images: [] },
                 });
               const error = await deleteCollectionAction(collection.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: collection,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/collections");
+            router.push('/collections');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -366,8 +366,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/orders/useOptimisticOrders";
-import { type Order } from "@/lib/db/schema/orders";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/orders/useOptimisticOrders';
+import { type Order } from '@/lib/db/schema/orders';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import OrderForm from "@/components/orders/OrderForm";
-import { type Customer } from "@/lib/db/schema/customers";
-import { type Payment } from "@/lib/db/schema/payments";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import OrderForm from '@/components/orders/OrderForm';
+import { type Customer } from '@/lib/db/schema/customers';
+import { type Payment } from '@/lib/db/schema/payments';
 
-export default function OptimisticOrder({ 
+export default function OptimisticOrder({
   order,
   customers,
-  payments 
-}: { 
-  order: Order; 
-  
-  customers: Customer[]
-  payments: Payment[]
+  payments,
+}: {
+  order: Order;
+
+  customers: Customer[];
+  payments: Payment[];
 }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Order) => {
@@ -36,7 +36,7 @@ export default function OptimisticOrder({
         <OrderForm
           order={order}
           customers={customers}
-        payments={payments}
+          payments={payments}
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateOrder}
@@ -50,8 +50,8 @@ export default function OptimisticOrder({
       </div>
       <pre
         className={cn(
-          "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticOrder.id === "optimistic" ? "animate-pulse" : "",
+          'bg-secondary p-4 rounded-lg break-all text-wrap',
+          optimisticOrder.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         {JSON.stringify(optimisticOrder, null, 2)}

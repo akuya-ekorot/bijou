@@ -1,4 +1,4 @@
-import { supabase } from "../supabase/client";
+import { supabase } from '../supabase/client';
 
 export const upload = async (images: FileList) => {
   const urls: Array<{ url: string }> = [];
@@ -7,14 +7,14 @@ export const upload = async (images: FileList) => {
     const image = images[i];
 
     const { data: uploadData, error } = await supabase.storage
-      .from("shops")
+      .from('shops')
       .upload(`shops/images/${Date.now()}`, image);
 
     if (error) {
       return { error: error.message, data: null };
     }
 
-    const url = supabase.storage.from("shops").getPublicUrl(uploadData.path)
+    const url = supabase.storage.from('shops').getPublicUrl(uploadData.path)
       .data.publicUrl;
 
     urls.push({ url });

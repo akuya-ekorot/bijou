@@ -1,29 +1,29 @@
-import { CompleteProduct } from "@/lib/db/schema/products";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { CompleteProduct } from '@/lib/db/schema/products';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Eye, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useParams, useRouter } from "next/navigation";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "../ui/badge";
-import { Collection } from "@/lib/db/schema/collections";
-import Link from "next/link";
+} from '@/components/ui/dropdown-menu';
+import { useParams, useRouter } from 'next/navigation';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '../ui/badge';
+import { Collection } from '@/lib/db/schema/collections';
+import Link from 'next/link';
 
 export const columns: ColumnDef<CompleteProduct>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -40,12 +40,12 @@ export const columns: ColumnDef<CompleteProduct>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -54,10 +54,10 @@ export const columns: ColumnDef<CompleteProduct>[] = [
     },
   },
   {
-    accessorKey: "collections",
+    accessorKey: 'collections',
     header: () => <div className="">Collections</div>,
     cell: ({ row }) => {
-      const collections = row.getValue("collections") as Array<Collection>;
+      const collections = row.getValue('collections') as Array<Collection>;
 
       return (
         <div className="flex flex-wrap items-center gap-2">
@@ -69,20 +69,20 @@ export const columns: ColumnDef<CompleteProduct>[] = [
     },
   },
   {
-    accessorKey: "price",
+    accessorKey: 'price',
     header: () => <div className="text-right">Price</div>,
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-KE", {
-        style: "currency",
-        currency: "KES",
+      const price = parseFloat(row.getValue('price'));
+      const formatted = new Intl.NumberFormat('en-KE', {
+        style: 'currency',
+        currency: 'KES',
       }).format(price);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const product = row.original;
 
@@ -107,7 +107,7 @@ export const columns: ColumnDef<CompleteProduct>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Button
-                variant={"destructive"}
+                variant={'destructive'}
                 className="flex items-center gap-2"
               >
                 <Trash className="w-4 h-4" />

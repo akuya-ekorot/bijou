@@ -1,15 +1,15 @@
-import { getImageById, getImages } from "@/lib/api/images/queries";
-import { publicProcedure, router } from "@/lib/server/trpc";
+import { getImageById, getImages } from '@/lib/api/images/queries';
+import { publicProcedure, router } from '@/lib/server/trpc';
 import {
   imageIdSchema,
   insertImageParams,
   updateImageParams,
-} from "@/lib/db/schema/images";
+} from '@/lib/db/schema/images';
 import {
   createImage,
   deleteImage,
   updateImage,
-} from "@/lib/api/images/mutations";
+} from '@/lib/api/images/mutations';
 
 export const imagesRouter = router({
   getImages: publicProcedure.query(async () => {

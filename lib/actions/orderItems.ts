@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   createOrderItem,
   deleteOrderItem,
   updateOrderItem,
-} from "@/lib/api/orderItems/mutations";
+} from '@/lib/api/orderItems/mutations';
 import {
   OrderItemId,
   NewOrderItemParams,
@@ -13,19 +13,19 @@ import {
   orderItemIdSchema,
   insertOrderItemParams,
   updateOrderItemParams,
-} from "@/lib/db/schema/orderItems";
+} from '@/lib/db/schema/orderItems';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateOrderItems = () => revalidatePath("/order-items");
+const revalidateOrderItems = () => revalidatePath('/order-items');
 
 export const createOrderItemAction = async (input: NewOrderItemParams) => {
   try {

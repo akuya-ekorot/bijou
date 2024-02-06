@@ -1,24 +1,24 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/[shopSlug]/payments/useOptimisticPayments";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/[shopSlug]/payments/useOptimisticPayments';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
-import { type Payment, insertPaymentParams } from "@/lib/db/schema/payments";
+import { type Payment, insertPaymentParams } from '@/lib/db/schema/payments';
 import {
   createPaymentAction,
   deletePaymentAction,
   updatePaymentAction,
-} from "@/lib/actions/payments";
+} from '@/lib/actions/payments';
 
 const PaymentForm = ({
   payment,
@@ -57,9 +57,9 @@ const PaymentForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Payment ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Payment ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -78,8 +78,8 @@ const PaymentForm = ({
     const pendingPayment: Payment = {
       updatedAt: payment?.updatedAt ?? new Date(),
       createdAt: payment?.createdAt ?? new Date(),
-      id: payment?.id ?? "",
-      userId: payment?.userId ?? "",
+      id: payment?.id ?? '',
+      userId: payment?.userId ?? '',
       ...values,
     };
     try {
@@ -87,7 +87,7 @@ const PaymentForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingPayment,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const error = editing
@@ -95,11 +95,11 @@ const PaymentForm = ({
           : await createPaymentAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingPayment,
         };
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -111,13 +111,13 @@ const PaymentForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange} className={'space-y-8'}>
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.status ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.status ? 'text-destructive' : '',
           )}
         >
           Status
@@ -125,8 +125,8 @@ const PaymentForm = ({
         <Input
           type="text"
           name="status"
-          className={cn(errors?.status ? "ring ring-destructive" : "")}
-          defaultValue={payment?.status ?? ""}
+          className={cn(errors?.status ? 'ring ring-destructive' : '')}
+          defaultValue={payment?.status ?? ''}
         />
         {errors?.status ? (
           <p className="text-xs text-destructive mt-2">{errors.status[0]}</p>
@@ -137,8 +137,8 @@ const PaymentForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.reference ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.reference ? 'text-destructive' : '',
           )}
         >
           Reference
@@ -146,8 +146,8 @@ const PaymentForm = ({
         <Input
           type="text"
           name="reference"
-          className={cn(errors?.reference ? "ring ring-destructive" : "")}
-          defaultValue={payment?.reference ?? ""}
+          className={cn(errors?.reference ? 'ring ring-destructive' : '')}
+          defaultValue={payment?.reference ?? ''}
         />
         {errors?.reference ? (
           <p className="text-xs text-destructive mt-2">{errors.reference[0]}</p>
@@ -158,8 +158,8 @@ const PaymentForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.amount ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.amount ? 'text-destructive' : '',
           )}
         >
           Amount
@@ -167,8 +167,8 @@ const PaymentForm = ({
         <Input
           type="text"
           name="amount"
-          className={cn(errors?.amount ? "ring ring-destructive" : "")}
-          defaultValue={payment?.amount ?? ""}
+          className={cn(errors?.amount ? 'ring ring-destructive' : '')}
+          defaultValue={payment?.amount ?? ''}
         />
         {errors?.amount ? (
           <p className="text-xs text-destructive mt-2">{errors.amount[0]}</p>
@@ -186,26 +186,26 @@ const PaymentForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
-                addOptimistic({ action: "delete", data: payment });
+                addOptimistic({ action: 'delete', data: payment });
               const error = await deletePaymentAction(payment.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: payment,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/payments");
+            router.push('/payments');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -232,8 +232,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

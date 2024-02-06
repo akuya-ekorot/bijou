@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { type Customer, CompleteCustomer } from "@/lib/db/schema/customers";
-import Modal from "@/components/shared/Modal";
+import { cn } from '@/lib/utils';
+import { type Customer, CompleteCustomer } from '@/lib/db/schema/customers';
+import Modal from '@/components/shared/Modal';
 
-import { useOptimisticCustomers } from "@/app/[shopSlug]/customers/useOptimisticCustomers";
-import { Button } from "@/components/ui/button";
-import CustomerForm from "./CustomerForm";
-import { PlusIcon } from "lucide-react";
+import { useOptimisticCustomers } from '@/app/[shopSlug]/customers/useOptimisticCustomers';
+import { Button } from '@/components/ui/button';
+import CustomerForm from './CustomerForm';
+import { PlusIcon } from 'lucide-react';
 
 type TOpenModal = (customer?: Customer) => void;
 
@@ -34,7 +34,7 @@ export default function CustomerList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeCustomer ? "Edit Customer" : "Create Customers"}
+        title={activeCustomer ? 'Edit Customer' : 'Create Customers'}
       >
         <CustomerForm
           customer={activeCustomer}
@@ -44,7 +44,7 @@ export default function CustomerList({
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -72,22 +72,22 @@ const Customer = ({
   customer: CompleteCustomer;
   openModal: TOpenModal;
 }) => {
-  const optimistic = customer.id === "optimistic";
-  const deleting = customer.id === "delete";
+  const optimistic = customer.id === 'optimistic';
+  const deleting = customer.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex justify-between my-2',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
         <div>{customer.name}</div>
       </div>
-      <Button variant={"link"} asChild>
-        <Link href={"/customers/" + customer.id}>Edit</Link>
+      <Button variant={'link'} asChild>
+        <Link href={'/customers/' + customer.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -104,7 +104,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Customers{" "}
+          <PlusIcon className="h-4" /> New Customers{' '}
         </Button>
       </div>
     </div>

@@ -1,28 +1,28 @@
-import { sql } from "drizzle-orm";
-import { text, real, varchar, timestamp, pgTable } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
+import { sql } from 'drizzle-orm';
+import { text, real, varchar, timestamp, pgTable } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
-import { users } from "@/lib/db/schema/auth";
-import { type getProducts } from "@/lib/api/products/queries";
+import { users } from '@/lib/db/schema/auth';
+import { type getProducts } from '@/lib/api/products/queries';
 
-import { nanoid, timestamps } from "@/lib/utils";
+import { nanoid, timestamps } from '@/lib/utils';
 
-export const products = pgTable("products", {
-  id: varchar("id", { length: 191 })
+export const products = pgTable('products', {
+  id: varchar('id', { length: 191 })
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  name: text("name").notNull(),
-  slug: text("slug").notNull(),
-  description: text("description").notNull(),
-  price: real("price"),
-  userId: varchar("user_id", { length: 256 })
-    .references(() => users.id, { onDelete: "cascade" })
+  name: text('name').notNull(),
+  slug: text('slug').notNull(),
+  description: text('description').notNull(),
+  price: real('price'),
+  userId: varchar('user_id', { length: 256 })
+    .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  createdAt: timestamp("created_at")
+  createdAt: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp('updated_at')
     .notNull()
     .default(sql`now()`),
 });
@@ -56,9 +56,9 @@ export type Product = typeof products.$inferSelect;
 export type NewProduct = z.infer<typeof insertProductSchema>;
 export type NewProductParams = z.infer<typeof insertProductParams>;
 export type UpdateProductParams = z.infer<typeof updateProductParams>;
-export type ProductId = z.infer<typeof productIdSchema>["id"];
+export type ProductId = z.infer<typeof productIdSchema>['id'];
 
 // this type infers the return from getProducts() - meaning it will include any joins
 export type CompleteProduct = Awaited<
   ReturnType<typeof getProducts>
->["products"][number];
+>['products'][number];

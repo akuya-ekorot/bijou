@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
-import { db } from "@/lib/db/index";
-import { eq, and } from "drizzle-orm";
-import { getUserAuth } from "@/lib/auth/utils";
+import { db } from '@/lib/db/index';
+import { eq, and } from 'drizzle-orm';
+import { getUserAuth } from '@/lib/auth/utils';
 import {
   type ShopId,
   shopIdSchema,
   shops,
   ShopSlug,
   shopSlugSchema,
-} from "@/lib/db/schema/shops";
+} from '@/lib/db/schema/shops';
 
 export const getShops = async () => {
   const { session } = await getUserAuth();

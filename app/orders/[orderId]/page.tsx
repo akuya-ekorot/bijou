@@ -1,16 +1,16 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-import { getOrderById } from "@/lib/api/orders/queries";
-import { getCustomers } from "@/lib/api/customers/queries";
-import { getPayments } from "@/lib/api/payments/queries";import OptimisticOrder from "./OptimisticOrder";
-import { checkAuth } from "@/lib/auth/utils";
+import { getOrderById } from '@/lib/api/orders/queries';
+import { getCustomers } from '@/lib/api/customers/queries';
+import { getPayments } from '@/lib/api/payments/queries';
+import OptimisticOrder from './OptimisticOrder';
+import { checkAuth } from '@/lib/auth/utils';
 
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import Loading from "@/app/loading";
-
+import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon } from 'lucide-react';
+import Loading from '@/app/loading';
 
 export const revalidate = 0;
 
@@ -19,7 +19,6 @@ export default async function OrderPage({
 }: {
   params: { orderId: string };
 }) {
-
   return (
     <main className="overflow-auto">
       <Order id={params.orderId} />
@@ -43,7 +42,11 @@ const Order = async ({ id }: { id: string }) => {
             <ChevronLeftIcon />
           </Link>
         </Button>
-        <OptimisticOrder order={order.order} customers={customers} payments={payments} />
+        <OptimisticOrder
+          order={order.order}
+          customers={customers}
+          payments={payments}
+        />
       </div>
     </Suspense>
   );

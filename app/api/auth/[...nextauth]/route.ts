@@ -1,10 +1,10 @@
-import { DefaultSession } from "next-auth";
-import NextAuth from "next-auth/next";
-import { authOptions } from "@/lib/auth/utils";
+import { DefaultSession } from 'next-auth';
+import NextAuth from 'next-auth/next';
+import { authOptions } from '@/lib/auth/utils';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
-    user: DefaultSession["user"] & {
+    user: DefaultSession['user'] & {
       id: string;
     };
   }

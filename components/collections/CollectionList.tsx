@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { CompleteCollection } from "@/lib/db/schema/collections";
-import Modal from "@/components/shared/Modal";
+import { cn } from '@/lib/utils';
+import { CompleteCollection } from '@/lib/db/schema/collections';
+import Modal from '@/components/shared/Modal';
 
-import { useOptimisticCollections } from "@/app/[shopSlug]/collections/useOptimisticCollections";
-import { Button } from "@/components/ui/button";
-import CollectionForm from "./CollectionForm";
-import { PlusIcon } from "lucide-react";
-import { DataTable } from "../shared/data-table";
-import { columns } from "./columns";
+import { useOptimisticCollections } from '@/app/[shopSlug]/collections/useOptimisticCollections';
+import { Button } from '@/components/ui/button';
+import CollectionForm from './CollectionForm';
+import { PlusIcon } from 'lucide-react';
+import { DataTable } from '../shared/data-table';
+import { columns } from './columns';
 
 type TOpenModal = (collection?: CompleteCollection) => void;
 
@@ -21,7 +21,7 @@ export default function CollectionList({
 }: {
   collections: CompleteCollection[];
 }) {
-  console.log("collections", collections);
+  console.log('collections', collections);
   const { optimisticCollections, addOptimisticCollection } =
     useOptimisticCollections(collections);
   const [open, setOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function CollectionList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeCollection ? "Edit Collection" : "Create Collections"}
+        title={activeCollection ? 'Edit Collection' : 'Create Collections'}
       >
         <CollectionForm
           collection={activeCollection}
@@ -48,7 +48,7 @@ export default function CollectionList({
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -68,22 +68,22 @@ const Collection = ({
   collection: CompleteCollection;
   openModal: TOpenModal;
 }) => {
-  const optimistic = collection.id === "optimistic";
-  const deleting = collection.id === "delete";
+  const optimistic = collection.id === 'optimistic';
+  const deleting = collection.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex justify-between my-2',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
         <div>{collection.name}</div>
       </div>
-      <Button variant={"link"} asChild>
-        <Link href={"collections/" + collection.id}>Edit</Link>
+      <Button variant={'link'} asChild>
+        <Link href={'collections/' + collection.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -100,7 +100,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Collections{" "}
+          <PlusIcon className="h-4" /> New Collections{' '}
         </Button>
       </div>
     </div>

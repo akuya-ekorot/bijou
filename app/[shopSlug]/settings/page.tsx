@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
+import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
 
 export default function Page() {
   const { setTheme } = useTheme();
@@ -18,9 +18,9 @@ export default function Page() {
         </div>
         <Button
           asChild
-          variant={"ghost"}
+          variant={'ghost'}
           className="w-fit h-fit"
-          onClick={() => setTheme("light")}
+          onClick={() => setTheme('light')}
         >
           <div className="flex flex-col">
             <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
@@ -46,8 +46,8 @@ export default function Page() {
         </Button>
         <Button
           asChild
-          variant={"ghost"}
-          onClick={() => setTheme("dark")}
+          variant={'ghost'}
+          onClick={() => setTheme('dark')}
           className="w-fit h-fit"
         >
           <div className="flex flex-col">
@@ -74,8 +74,8 @@ export default function Page() {
         </Button>
         <Button
           asChild
-          variant={"ghost"}
-          onClick={() => setTheme("system")}
+          variant={'ghost'}
+          onClick={() => setTheme('system')}
           className="w-fit h-fit"
         >
           <div className="flex flex-col">

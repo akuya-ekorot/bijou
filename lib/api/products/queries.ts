@@ -1,16 +1,16 @@
-import { db } from "@/lib/db/index";
-import { eq, and } from "drizzle-orm";
-import { getUserAuth } from "@/lib/auth/utils";
+import { db } from '@/lib/db/index';
+import { eq, and } from 'drizzle-orm';
+import { getUserAuth } from '@/lib/auth/utils';
 import {
   type ProductId,
   productIdSchema,
   products,
   Product,
-} from "@/lib/db/schema/products";
-import { Collection, collections } from "@/lib/db/schema/collections";
-import { collectionProducts } from "@/lib/db/schema/collectionProducts";
-import { TImage, images } from "@/lib/db/schema/images";
-import { productImages } from "@/lib/db/schema/productImages";
+} from '@/lib/db/schema/products';
+import { Collection, collections } from '@/lib/db/schema/collections';
+import { collectionProducts } from '@/lib/db/schema/collectionProducts';
+import { TImage, images } from '@/lib/db/schema/images';
+import { productImages } from '@/lib/db/schema/productImages';
 
 const formatProduct = (
   p: {

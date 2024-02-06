@@ -1,43 +1,43 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
 
-import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/[shopSlug]/products/useOptimisticProducts";
+import { type Action, cn } from '@/lib/utils';
+import { type TAddOptimistic } from '@/app/[shopSlug]/products/useOptimisticProducts';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 import {
   type Product,
   insertProductParams,
   CompleteProduct,
-} from "@/lib/db/schema/products";
+} from '@/lib/db/schema/products';
 import {
   createProductAction,
   deleteProductAction,
   updateProductAction,
-} from "@/lib/actions/products";
-import { upload } from "@/lib/api/upload";
-import { insertMultipleImagesParams } from "@/lib/db/schema/images";
-import { createImageAction } from "@/lib/actions/images";
-import { createProductImageAction } from "@/lib/actions/productImages";
-import { Collection, CompleteCollection } from "@/lib/db/schema/collections";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+} from '@/lib/actions/products';
+import { upload } from '@/lib/api/upload';
+import { insertMultipleImagesParams } from '@/lib/db/schema/images';
+import { createImageAction } from '@/lib/actions/images';
+import { createProductImageAction } from '@/lib/actions/productImages';
+import { Collection, CompleteCollection } from '@/lib/db/schema/collections';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "../ui/command";
-import { createCollectionProductAction } from "@/lib/actions/collectionProducts";
+} from '../ui/command';
+import { createCollectionProductAction } from '@/lib/actions/collectionProducts';
 
 const ProductForm = ({
   collections,
@@ -78,9 +78,9 @@ const ProductForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Product ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Product ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -100,7 +100,7 @@ const ProductForm = ({
       const { data: uploadData, error: uploadError } = await upload(images);
 
       if (uploadError || !uploadData) {
-        setErrors({ images: [uploadError ?? "error uploading images"] });
+        setErrors({ images: [uploadError ?? 'error uploading images'] });
         return;
       }
 
@@ -110,7 +110,7 @@ const ProductForm = ({
 
       if (!imageParsed.success) {
         console.log(imageParsed.error);
-        setErrors({ images: ["Error parsing image data"] });
+        setErrors({ images: ['Error parsing image data'] });
         return;
       }
 
@@ -118,7 +118,7 @@ const ProductForm = ({
         const { error, image } = await createImageAction(parsedImage);
 
         if (error || !image) {
-          setErrors({ images: [error ?? "Error creating image records"] });
+          setErrors({ images: [error ?? 'Error creating image records'] });
           return;
         }
 
@@ -127,7 +127,7 @@ const ProductForm = ({
     }
 
     const payload = Object.fromEntries(data.entries());
-    console.log("payload", payload);
+    console.log('payload', payload);
     const productParsed = await insertProductParams.safeParseAsync(payload);
     if (!productParsed.success) {
       setErrors(productParsed?.error.flatten().fieldErrors);
@@ -138,8 +138,8 @@ const ProductForm = ({
     const values = productParsed.data;
     const pendingImages = imageIds.map((image) => ({
       ...image,
-      url: "",
-      userId: product?.userId ?? "",
+      url: '',
+      userId: product?.userId ?? '',
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
     }));
@@ -147,8 +147,8 @@ const ProductForm = ({
     const pendingProduct: CompleteProduct = {
       updatedAt: product?.updatedAt ?? new Date(),
       createdAt: product?.createdAt ?? new Date(),
-      id: product?.id ?? "",
-      userId: product?.userId ?? "",
+      id: product?.id ?? '',
+      userId: product?.userId ?? '',
       collections: product?.collections ?? [],
       images: pendingImages,
       ...values,
@@ -158,7 +158,7 @@ const ProductForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingProduct,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const { product: newProduct, error } = editing
@@ -166,13 +166,13 @@ const ProductForm = ({
           : await createProductAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingProduct,
         };
 
         if (error || !newProduct) {
           onSuccess(
-            editing ? "update" : "create",
+            editing ? 'update' : 'create',
             error ? errorFormatted : undefined,
           );
           return;
@@ -210,7 +210,7 @@ const ProductForm = ({
         }
 
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -227,7 +227,7 @@ const ProductForm = ({
   >(product?.collections ?? []);
 
   const [openCollectionCombobox, setOpenCollectionComobox] = useState(false);
-  const [collectionSearch, setCollectionSearch] = useState("");
+  const [collectionSearch, setCollectionSearch] = useState('');
 
   const handleSelectCollection = (id: string) => {
     const collection = collections.find((c) => c.id === id);
@@ -252,14 +252,14 @@ const ProductForm = ({
     <form
       action={handleSubmitWrapper}
       onChange={handleChange}
-      className={"space-y-8"}
+      className={'space-y-8'}
     >
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.name ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.name ? 'text-destructive' : '',
           )}
         >
           Name
@@ -267,8 +267,8 @@ const ProductForm = ({
         <Input
           type="text"
           name="name"
-          className={cn(errors?.name ? "ring ring-destructive" : "")}
-          defaultValue={product?.name ?? ""}
+          className={cn(errors?.name ? 'ring ring-destructive' : '')}
+          defaultValue={product?.name ?? ''}
         />
         {errors?.name ? (
           <p className="text-xs text-destructive mt-2">{errors.name[0]}</p>
@@ -279,8 +279,8 @@ const ProductForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.slug ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.slug ? 'text-destructive' : '',
           )}
         >
           Slug
@@ -288,8 +288,8 @@ const ProductForm = ({
         <Input
           type="text"
           name="slug"
-          className={cn(errors?.slug ? "ring ring-destructive" : "")}
-          defaultValue={product?.slug ?? ""}
+          className={cn(errors?.slug ? 'ring ring-destructive' : '')}
+          defaultValue={product?.slug ?? ''}
         />
         {errors?.slug ? (
           <p className="text-xs text-destructive mt-2">{errors.slug[0]}</p>
@@ -300,8 +300,8 @@ const ProductForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.description ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.description ? 'text-destructive' : '',
           )}
         >
           Description
@@ -309,8 +309,8 @@ const ProductForm = ({
         <Input
           type="text"
           name="description"
-          className={cn(errors?.description ? "ring ring-destructive" : "")}
-          defaultValue={product?.description ?? ""}
+          className={cn(errors?.description ? 'ring ring-destructive' : '')}
+          defaultValue={product?.description ?? ''}
         />
         {errors?.description ? (
           <p className="text-xs text-destructive mt-2">
@@ -323,8 +323,8 @@ const ProductForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.price ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.price ? 'text-destructive' : '',
           )}
         >
           Price
@@ -333,8 +333,8 @@ const ProductForm = ({
           type="number"
           min="0"
           name="price"
-          className={cn(errors?.price ? "ring ring-destructive" : "")}
-          defaultValue={product?.price ?? ""}
+          className={cn(errors?.price ? 'ring ring-destructive' : '')}
+          defaultValue={product?.price ?? ''}
         />
         {errors?.price ? (
           <p className="text-xs text-destructive mt-2">{errors.price[0]}</p>
@@ -346,8 +346,8 @@ const ProductForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.images ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.images ? 'text-destructive' : '',
           )}
         >
           Images
@@ -356,7 +356,7 @@ const ProductForm = ({
           type="file"
           multiple
           name="images"
-          className={cn(errors?.images ? "ring ring-destructive" : "")}
+          className={cn(errors?.images ? 'ring ring-destructive' : '')}
           onChange={(e) => {
             setImages(e.target.files);
           }}
@@ -371,8 +371,8 @@ const ProductForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.collections ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.collections ? 'text-destructive' : '',
           )}
         >
           Collections
@@ -401,10 +401,10 @@ const ProductForm = ({
                     >
                       <Check
                         className={cn(
-                          "mr-2 h-4 w-4",
+                          'mr-2 h-4 w-4',
                           productCollections.find((c) => c.id === collection.id)
-                            ? "opacity-100"
-                            : "opacity-0",
+                            ? 'opacity-100'
+                            : 'opacity-0',
                         )}
                       />
                       {collection.name}
@@ -435,26 +435,26 @@ const ProductForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
               addOptimistic &&
-                addOptimistic({ action: "delete", data: product });
+                addOptimistic({ action: 'delete', data: product });
               const error = await deleteProductAction(product.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: product,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/products");
+            router.push('/products');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -481,8 +481,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

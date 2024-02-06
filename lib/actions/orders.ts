@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 import {
   createOrder,
   deleteOrder,
   updateOrder,
-} from "@/lib/api/orders/mutations";
+} from '@/lib/api/orders/mutations';
 import {
   OrderId,
   NewOrderParams,
@@ -13,19 +13,19 @@ import {
   orderIdSchema,
   insertOrderParams,
   updateOrderParams,
-} from "@/lib/db/schema/orders";
+} from '@/lib/db/schema/orders';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateOrders = () => revalidatePath("/orders");
+const revalidateOrders = () => revalidatePath('/orders');
 
 export const createOrderAction = async (input: NewOrderParams) => {
   try {

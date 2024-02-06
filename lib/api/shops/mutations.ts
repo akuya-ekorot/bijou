@@ -1,5 +1,5 @@
-import { db } from "@/lib/db/index";
-import { and, eq } from "drizzle-orm";
+import { db } from '@/lib/db/index';
+import { and, eq } from 'drizzle-orm';
 import {
   ShopId,
   NewShopParams,
@@ -8,8 +8,8 @@ import {
   insertShopSchema,
   shops,
   shopIdSchema,
-} from "@/lib/db/schema/shops";
-import { getUserAuth } from "@/lib/auth/utils";
+} from '@/lib/db/schema/shops';
+import { getUserAuth } from '@/lib/auth/utils';
 
 export const createShop = async (shop: NewShopParams) => {
   const { session } = await getUserAuth();
@@ -21,7 +21,7 @@ export const createShop = async (shop: NewShopParams) => {
     const [s] = await db.insert(shops).values(newShop).returning();
     return { shop: s };
   } catch (err) {
-    const message = (err as Error).message ?? "Error, please try again";
+    const message = (err as Error).message ?? 'Error, please try again';
     console.error(message);
     throw { error: message };
   }
@@ -42,7 +42,7 @@ export const updateShop = async (id: ShopId, shop: UpdateShopParams) => {
       .returning();
     return { shop: s };
   } catch (err) {
-    const message = (err as Error).message ?? "Error, please try again";
+    const message = (err as Error).message ?? 'Error, please try again';
     console.error(message);
     throw { error: message };
   }
@@ -58,7 +58,7 @@ export const deleteShop = async (id: ShopId) => {
       .returning();
     return { shop: s };
   } catch (err) {
-    const message = (err as Error).message ?? "Error, please try again";
+    const message = (err as Error).message ?? 'Error, please try again';
     console.error(message);
     throw { error: message };
   }

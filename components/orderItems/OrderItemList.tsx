@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-import { cn } from "@/lib/utils";
-import { type OrderItem, CompleteOrderItem } from "@/lib/db/schema/orderItems";
-import Modal from "@/components/shared/Modal";
-import { type Order } from "@/lib/db/schema/orders";
-import { type Product } from "@/lib/db/schema/products";
-import { type Shop } from "@/lib/db/schema/shops";
-import { useOptimisticOrderItems } from "@/app/[shopSlug]/order-items/useOptimisticOrderItems";
-import { Button } from "@/components/ui/button";
-import OrderItemForm from "./OrderItemForm";
-import { PlusIcon } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { type OrderItem, CompleteOrderItem } from '@/lib/db/schema/orderItems';
+import Modal from '@/components/shared/Modal';
+import { type Order } from '@/lib/db/schema/orders';
+import { type Product } from '@/lib/db/schema/products';
+import { type Shop } from '@/lib/db/schema/shops';
+import { useOptimisticOrderItems } from '@/app/[shopSlug]/order-items/useOptimisticOrderItems';
+import { Button } from '@/components/ui/button';
+import OrderItemForm from './OrderItemForm';
+import { PlusIcon } from 'lucide-react';
 
 type TOpenModal = (orderItem?: OrderItem) => void;
 
@@ -44,7 +44,7 @@ export default function OrderItemList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeOrderItem ? "Edit OrderItem" : "Create Order Items"}
+        title={activeOrderItem ? 'Edit OrderItem' : 'Create Order Items'}
       >
         <OrderItemForm
           orderItem={activeOrderItem}
@@ -57,7 +57,7 @@ export default function OrderItemList({
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
+        <Button onClick={() => openModal()} variant={'outline'}>
           +
         </Button>
       </div>
@@ -85,22 +85,22 @@ const OrderItem = ({
   orderItem: CompleteOrderItem;
   openModal: TOpenModal;
 }) => {
-  const optimistic = orderItem.orderItem.id === "optimistic";
-  const deleting = orderItem.orderItem.id === "delete";
+  const optimistic = orderItem.orderItem.id === 'optimistic';
+  const deleting = orderItem.orderItem.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
       className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : "",
+        'flex justify-between my-2',
+        mutating ? 'opacity-30 animate-pulse' : '',
+        deleting ? 'text-destructive' : '',
       )}
     >
       <div className="w-full">
         <div>{orderItem.orderItem.orderId}</div>
       </div>
-      <Button variant={"link"} asChild>
-        <Link href={"/order-items/" + orderItem.orderItem.id}>Edit</Link>
+      <Button variant={'link'} asChild>
+        <Link href={'/order-items/' + orderItem.orderItem.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -117,7 +117,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Order Items{" "}
+          <PlusIcon className="h-4" /> New Order Items{' '}
         </Button>
       </div>
     </div>

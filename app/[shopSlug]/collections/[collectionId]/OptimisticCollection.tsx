@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/[shopSlug]/collections/useOptimisticCollections";
-import { CompleteCollection } from "@/lib/db/schema/collections";
-import { cn } from "@/lib/utils";
+import { useOptimistic, useState } from 'react';
+import { TAddOptimistic } from '@/app/[shopSlug]/collections/useOptimisticCollections';
+import { CompleteCollection } from '@/lib/db/schema/collections';
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/shared/Modal";
-import CollectionForm from "@/components/collections/CollectionForm";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/shared/Modal';
+import CollectionForm from '@/components/collections/CollectionForm';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 export default function OptimisticCollection({
   collection,
@@ -45,8 +45,8 @@ export default function OptimisticCollection({
       </div>
       <div
         className={cn(
-          "p-4 rounded-lg",
-          optimisticCollection.id === "optimistic" ? "animate-pulse" : "",
+          'p-4 rounded-lg',
+          optimisticCollection.id === 'optimistic' ? 'animate-pulse' : '',
         )}
       >
         <div className="grid grid-cols-2 gap-4">

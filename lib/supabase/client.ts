@@ -1,5 +1,5 @@
-import { createBrowserClient } from "@supabase/ssr";
-import { env } from "../env.mjs";
+import { createBrowserClient } from '@supabase/ssr';
+import { env } from '../env.mjs';
 
 export const supabase = createBrowserClient(
   env.NEXT_PUBLIC_SUPABASE_URL,

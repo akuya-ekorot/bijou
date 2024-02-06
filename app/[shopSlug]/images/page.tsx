@@ -1,10 +1,10 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import Loading from "@/app/loading";
-import ImageList from "@/components/images/ImageList";
-import { getImages } from "@/lib/api/images/queries";
+import Loading from '@/app/loading';
+import ImageList from '@/components/images/ImageList';
+import { getImages } from '@/lib/api/images/queries';
 
-import { checkAuth } from "@/lib/auth/utils";
+import { checkAuth } from '@/lib/auth/utils';
 
 export const revalidate = 0;
 
@@ -25,10 +25,10 @@ const Images = async () => {
   await checkAuth();
 
   const { images } = await getImages();
-  
+
   return (
     <Suspense fallback={<Loading />}>
-      <ImageList images={images}  />
+      <ImageList images={images} />
     </Suspense>
   );
 };

@@ -1,11 +1,11 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import Loading from "@/app/loading";
-import ProductList from "@/components/products/ProductList";
-import { getProducts } from "@/lib/api/products/queries";
+import Loading from '@/app/loading';
+import ProductList from '@/components/products/ProductList';
+import { getProducts } from '@/lib/api/products/queries';
 
-import { checkAuth } from "@/lib/auth/utils";
-import { getCollections } from "@/lib/api/collections/queries";
+import { checkAuth } from '@/lib/auth/utils';
+import { getCollections } from '@/lib/api/collections/queries';
 
 export const revalidate = 0;
 

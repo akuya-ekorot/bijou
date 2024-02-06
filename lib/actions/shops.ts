@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import { createShop, deleteShop, updateShop } from "@/lib/api/shops/mutations";
+import { revalidatePath } from 'next/cache';
+import { createShop, deleteShop, updateShop } from '@/lib/api/shops/mutations';
 import {
   ShopId,
   NewShopParams,
@@ -9,19 +9,19 @@ import {
   shopIdSchema,
   insertShopParams,
   updateShopParams,
-} from "@/lib/db/schema/shops";
+} from '@/lib/db/schema/shops';
 
 const handleErrors = (e: unknown) => {
-  const errMsg = "Error, please try again.";
+  const errMsg = 'Error, please try again.';
   if (e instanceof Error) return e.message.length > 0 ? e.message : errMsg;
-  if (e && typeof e === "object" && "error" in e) {
+  if (e && typeof e === 'object' && 'error' in e) {
     const errAsStr = e.error as string;
     return errAsStr.length > 0 ? errAsStr : errMsg;
   }
   return errMsg;
 };
 
-const revalidateShops = () => revalidatePath("/shops");
+const revalidateShops = () => revalidatePath('/shops');
 
 export const createShopAction = async (input: NewShopParams) => {
   try {
@@ -52,4 +52,3 @@ export const deleteShopAction = async (input: ShopId) => {
     return handleErrors(e);
   }
 };
-

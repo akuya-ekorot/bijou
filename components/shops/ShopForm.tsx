@@ -1,26 +1,26 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { useToast } from "@/components/ui/use-toast";
-import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
+import { useToast } from '@/components/ui/use-toast';
+import { useValidatedForm } from '@/lib/hooks/useValidatedForm';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useFormStatus } from 'react-dom';
 
-import { cn, type Action } from "@/lib/utils";
+import { cn, type Action } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-import { TAddOptimistic } from "@/lib/hooks/useOptimisticShops";
+import { TAddOptimistic } from '@/lib/hooks/useOptimisticShops';
 import {
   createShopAction,
   deleteShopAction,
   updateShopAction,
-} from "@/lib/actions/shops";
-import { upload } from "@/lib/api/upload";
-import { insertShopParams, type Shop } from "@/lib/db/schema/shops";
-import UploadImage from "../shared/upload-image";
+} from '@/lib/actions/shops';
+import { upload } from '@/lib/api/upload';
+import { insertShopParams, type Shop } from '@/lib/db/schema/shops';
+import UploadImage from '../shared/upload-image';
 
 const ShopForm = ({
   shop,
@@ -61,9 +61,9 @@ const ShopForm = ({
     }
 
     toast({
-      title: failed ? `Failed to ${action}` : "Success",
-      description: failed ? data?.error ?? "Error" : `Shop ${action}d!`,
-      variant: failed ? "destructive" : "default",
+      title: failed ? `Failed to ${action}` : 'Success',
+      description: failed ? data?.error ?? 'Error' : `Shop ${action}d!`,
+      variant: failed ? 'destructive' : 'default',
     });
   };
 
@@ -71,16 +71,16 @@ const ShopForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    let logoUrl = shop?.logoUrl ?? "";
+    let logoUrl = shop?.logoUrl ?? '';
 
     if (images) {
       const { data: uploadData, error } = await upload(images);
 
       if (error || !uploadData) {
         toast({
-          title: "Error",
+          title: 'Error',
           description: JSON.stringify(error),
-          variant: "destructive",
+          variant: 'destructive',
         });
         return;
       }
@@ -103,8 +103,8 @@ const ShopForm = ({
     const pendingShop: Shop = {
       updatedAt: shop?.updatedAt ?? new Date(),
       createdAt: shop?.createdAt ?? new Date(),
-      id: shop?.id ?? "",
-      userId: shop?.userId ?? "",
+      id: shop?.id ?? '',
+      userId: shop?.userId ?? '',
       ...values,
     };
     try {
@@ -112,7 +112,7 @@ const ShopForm = ({
         addOptimistic &&
           addOptimistic({
             data: pendingShop,
-            action: editing ? "update" : "create",
+            action: editing ? 'update' : 'create',
           });
 
         const error = editing
@@ -120,11 +120,11 @@ const ShopForm = ({
           : await createShopAction(values);
 
         const errorFormatted = {
-          error: error ?? "Error",
+          error: error ?? 'Error',
           values: pendingShop,
         };
         onSuccess(
-          editing ? "update" : "create",
+          editing ? 'update' : 'create',
           error ? errorFormatted : undefined,
         );
       });
@@ -141,14 +141,14 @@ const ShopForm = ({
     <form
       action={handleSubmitWithImages}
       onChange={handleChange}
-      className={"space-y-4"}
+      className={'space-y-4'}
     >
       {/* Schema fields start */}
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.name ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.name ? 'text-destructive' : '',
           )}
         >
           Name
@@ -156,8 +156,8 @@ const ShopForm = ({
         <Input
           type="text"
           name="name"
-          className={cn(errors?.name ? "ring ring-destructive" : "")}
-          defaultValue={shop?.name ?? ""}
+          className={cn(errors?.name ? 'ring ring-destructive' : '')}
+          defaultValue={shop?.name ?? ''}
         />
         {errors?.name && (
           <p className="text-xs text-destructive mt-2">{errors.name[0]}</p>
@@ -166,8 +166,8 @@ const ShopForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.slug ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.slug ? 'text-destructive' : '',
           )}
         >
           Slug
@@ -175,8 +175,8 @@ const ShopForm = ({
         <Input
           type="text"
           name="slug"
-          className={cn(errors?.slug ? "ring ring-destructive" : "")}
-          defaultValue={shop?.slug ?? ""}
+          className={cn(errors?.slug ? 'ring ring-destructive' : '')}
+          defaultValue={shop?.slug ?? ''}
         />
         {errors?.slug && (
           <p className="text-xs text-destructive mt-2">{errors.slug[0]}</p>
@@ -185,8 +185,8 @@ const ShopForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.logoUrl ? "text-destructive" : "",
+            'mb-2 inline-block',
+            errors?.logoUrl ? 'text-destructive' : '',
           )}
         >
           Logo
@@ -206,25 +206,25 @@ const ShopForm = ({
         <Button
           type="button"
           disabled={isDeleting || pending || hasErrors}
-          variant={"destructive"}
+          variant={'destructive'}
           onClick={() => {
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: shop });
+              addOptimistic && addOptimistic({ action: 'delete', data: shop });
               const error = await deleteShopAction(shop.id);
               setIsDeleting(false);
               const errorFormatted = {
-                error: error ?? "Error",
+                error: error ?? 'Error',
                 values: shop,
               };
 
-              onSuccess("delete", error ? errorFormatted : undefined);
+              onSuccess('delete', error ? errorFormatted : undefined);
             });
-            router.push("/shops");
+            router.push('/shops');
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          Delet{isDeleting ? 'ing...' : 'e'}
         </Button>
       ) : null}
     </form>
@@ -251,8 +251,8 @@ const SaveButton = ({
       aria-disabled={isCreating || isUpdating || errors}
     >
       {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+        ? `Sav${isUpdating ? 'ing...' : 'e'}`
+        : `Creat${isCreating ? 'ing...' : 'e'}`}
     </Button>
   );
 };

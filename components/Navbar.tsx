@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import { defaultLinks } from "@/config/nav";
+import { defaultLinks } from '@/config/nav';
 
 export default function Navbar({ shopSlug }: { shopSlug: string }) {
   const pathname = usePathname();
@@ -21,8 +21,8 @@ export default function Navbar({ shopSlug }: { shopSlug: string }) {
                 href={`${shopSlug}/${link.href}`}
                 className={
                   pathname === `${shopSlug}/${link.href}`
-                    ? "text-primary hover:text-primary font-semibold"
-                    : "text-muted-foreground hover:text-primary"
+                    ? 'text-primary hover:text-primary font-semibold'
+                    : 'text-muted-foreground hover:text-primary'
                 }
               >
                 {link.title}

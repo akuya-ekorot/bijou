@@ -1,27 +1,27 @@
-import { sql } from "drizzle-orm";
-import { varchar, timestamp, pgTable } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-import { collections } from "./collections";
-import { products } from "./products";
-import { type getCollectionProducts } from "@/lib/api/collectionProducts/queries";
+import { sql } from 'drizzle-orm';
+import { varchar, timestamp, pgTable } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
+import { collections } from './collections';
+import { products } from './products';
+import { type getCollectionProducts } from '@/lib/api/collectionProducts/queries';
 
-import { nanoid, timestamps } from "@/lib/utils";
+import { nanoid, timestamps } from '@/lib/utils';
 
-export const collectionProducts = pgTable("collection_products", {
-  id: varchar("id", { length: 191 })
+export const collectionProducts = pgTable('collection_products', {
+  id: varchar('id', { length: 191 })
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  collectionId: varchar("collection_id", { length: 256 })
+  collectionId: varchar('collection_id', { length: 256 })
     .references(() => collections.id)
     .notNull(),
-  productId: varchar("product_id", { length: 256 })
+  productId: varchar('product_id', { length: 256 })
     .references(() => products.id)
     .notNull(),
-  createdAt: timestamp("created_at")
+  createdAt: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp('updated_at')
     .notNull()
     .default(sql`now()`),
 });
@@ -60,9 +60,9 @@ export type UpdateCollectionProductParams = z.infer<
 >;
 export type CollectionProductId = z.infer<
   typeof collectionProductIdSchema
->["id"];
+>['id'];
 
 // this type infers the return from getCollectionProducts() - meaning it will include any joins
 export type CompleteCollectionProduct = Awaited<
   ReturnType<typeof getCollectionProducts>
->["collectionProducts"][number];
+>['collectionProducts'][number];
