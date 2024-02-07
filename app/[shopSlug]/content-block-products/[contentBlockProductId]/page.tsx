@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 
 import { getContentBlockProductById } from '@/lib/api/contentBlockProducts/queries';
 import { getProducts } from '@/lib/api/products/queries';
-import { getProducts } from '@/lib/api/products/queries';
 import { getContentBlocks } from '@/lib/api/contentBlocks/queries';
 import OptimisticContentBlockProduct from '@/app/[shopSlug]/content-block-products/[contentBlockProductId]/OptimisticContentBlockProduct';
 import { checkAuth } from '@/lib/auth/utils';
@@ -30,7 +29,6 @@ const ContentBlockProduct = async ({ id }: { id: string }) => {
 
   const { contentBlockProduct } = await getContentBlockProductById(id);
   const { products } = await getProducts();
-  const { products } = await getProducts();
   const { contentBlocks } = await getContentBlocks();
 
   if (!contentBlockProduct) notFound();
@@ -40,7 +38,6 @@ const ContentBlockProduct = async ({ id }: { id: string }) => {
         <BackButton currentResource="content-block-products" />
         <OptimisticContentBlockProduct
           contentBlockProduct={contentBlockProduct}
-          products={products}
           products={products}
           contentBlocks={contentBlocks}
         />

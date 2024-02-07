@@ -39,7 +39,6 @@ export default function ContentBlockProductList({
     useOptimisticContentBlockProducts(
       contentBlockProducts,
       products,
-      products,
       contentBlocks,
     );
   const [open, setOpen] = useState(false);

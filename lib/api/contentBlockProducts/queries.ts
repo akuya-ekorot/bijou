@@ -7,7 +7,6 @@ import {
   contentBlockProducts,
 } from '@/lib/db/schema/contentBlockProducts';
 import { products } from '@/lib/db/schema/products';
-import { products } from '@/lib/db/schema/products';
 import { contentBlocks } from '@/lib/db/schema/contentBlocks';
 
 export const getContentBlockProducts = async () => {
@@ -16,11 +15,9 @@ export const getContentBlockProducts = async () => {
     .select({
       contentBlockProduct: contentBlockProducts,
       product: products,
-      product: products,
       contentBlock: contentBlocks,
     })
     .from(contentBlockProducts)
-    .leftJoin(products, eq(contentBlockProducts.productId, products.id))
     .leftJoin(products, eq(contentBlockProducts.productId, products.id))
     .leftJoin(
       contentBlocks,
@@ -29,7 +26,6 @@ export const getContentBlockProducts = async () => {
     .where(eq(contentBlockProducts.userId, session?.user.id!));
   const c = rows.map((r) => ({
     ...r.contentBlockProduct,
-    product: r.product,
     product: r.product,
     contentBlock: r.contentBlock,
   }));
@@ -45,7 +41,6 @@ export const getContentBlockProductById = async (id: ContentBlockProductId) => {
     .select({
       contentBlockProduct: contentBlockProducts,
       product: products,
-      product: products,
       contentBlock: contentBlocks,
     })
     .from(contentBlockProducts)
@@ -56,7 +51,6 @@ export const getContentBlockProductById = async (id: ContentBlockProductId) => {
       ),
     )
     .leftJoin(products, eq(contentBlockProducts.productId, products.id))
-    .leftJoin(products, eq(contentBlockProducts.productId, products.id))
     .leftJoin(
       contentBlocks,
       eq(contentBlockProducts.contentBlockId, contentBlocks.id),
@@ -64,7 +58,6 @@ export const getContentBlockProductById = async (id: ContentBlockProductId) => {
   if (row === undefined) return {};
   const c = {
     ...row.contentBlockProduct,
-    product: row.product,
     product: row.product,
     contentBlock: row.contentBlock,
   };
