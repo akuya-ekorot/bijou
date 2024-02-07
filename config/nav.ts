@@ -26,6 +26,11 @@ export const additionalLinks: AdditionalLinks[] = [
     title: 'Entities',
     links: [
       {
+        href: '/content-blocks',
+        title: 'Content Blocks',
+        icon: File,
+      },
+      {
         href: '/heroes',
         title: 'Heroes',
         icon: File,
