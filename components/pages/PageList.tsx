@@ -4,36 +4,29 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
-import { type Order, CompleteOrder } from '@/lib/db/schema/orders';
+import { type Page, CompletePage } from '@/lib/db/schema/pages';
 import Modal from '@/components/shared/Modal';
-import { type Customer } from '@/lib/db/schema/customers';
-import { type Payment } from '@/lib/db/schema/payments';
-import { useOptimisticOrders } from '@/app/[shopSlug]/orders/useOptimisticOrders';
+
+import { useOptimisticPages } from '@/app/[shopSlug]/pages/useOptimisticPages';
 import { Button } from '@/components/ui/button';
-import OrderForm from './OrderForm';
+import PageForm from './PageForm';
 import { PlusIcon } from 'lucide-react';
 
-type TOpenModal = (order?: Order) => void;
+type TOpenModal = (page?: Page) => void;
 
-export default function OrderList({
-  orders,
-  customers,
-  payments,
+export default function PageList({
+  pages,
+  shopId,
 }: {
-  orders: CompleteOrder[];
-  customers: Customer[];
-  payments: Payment[];
+  pages: CompletePage[];
+  shopId: string;
 }) {
-  const { optimisticOrders, addOptimisticOrder } = useOptimisticOrders(
-    orders,
-    customers,
-    payments,
-  );
+  const { optimisticPages, addOptimisticPage } = useOptimisticPages(pages);
   const [open, setOpen] = useState(false);
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const openModal = (order?: Order) => {
+  const [activePage, setActivePage] = useState<Page | null>(null);
+  const openModal = (page?: Page) => {
     setOpen(true);
-    order ? setActiveOrder(order) : setActiveOrder(null);
+    page ? setActivePage(page) : setActivePage(null);
   };
   const closeModal = () => setOpen(false);
 
@@ -42,15 +35,14 @@ export default function OrderList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeOrder ? 'Edit Order' : 'Create Orders'}
+        title={activePage ? 'Edit Page' : 'Create Pages'}
       >
-        <OrderForm
-          order={activeOrder}
-          addOptimistic={addOptimisticOrder}
+        <PageForm
+          shopId={shopId}
+          page={activePage}
+          addOptimistic={addOptimisticPage}
           openModal={openModal}
           closeModal={closeModal}
-          customers={customers}
-          payments={payments}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -58,12 +50,12 @@ export default function OrderList({
           +
         </Button>
       </div>
-      {optimisticOrders.length === 0 ? (
+      {optimisticPages.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
         <ul>
-          {optimisticOrders.map((order) => (
-            <Order order={order} key={order.order.id} openModal={openModal} />
+          {optimisticPages.map((page) => (
+            <Page page={page} key={page.id} openModal={openModal} />
           ))}
         </ul>
       )}
@@ -71,15 +63,15 @@ export default function OrderList({
   );
 }
 
-const Order = ({
-  order,
+const Page = ({
+  page,
   openModal,
 }: {
-  order: CompleteOrder;
+  page: CompletePage;
   openModal: TOpenModal;
 }) => {
-  const optimistic = order.order.id === 'optimistic';
-  const deleting = order.order.id === 'delete';
+  const optimistic = page.id === 'optimistic';
+  const deleting = page.id === 'delete';
   const mutating = optimistic || deleting;
   return (
     <li
@@ -90,10 +82,10 @@ const Order = ({
       )}
     >
       <div className="w-full">
-        <div>{order.order.customerId}</div>
+        <div>{page.title}</div>
       </div>
       <Button variant={'link'} asChild>
-        <Link href={'/orders/' + order.order.id}>Edit</Link>
+        <Link href={'pages/' + page.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -103,14 +95,14 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
   return (
     <div className="text-center">
       <h3 className="mt-2 text-sm font-semibold text-secondary-foreground">
-        No orders
+        No pages
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Get started by creating a new order.
+        Get started by creating a new page.
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Orders{' '}
+          <PlusIcon className="h-4" /> New Pages{' '}
         </Button>
       </div>
     </div>

@@ -2,38 +2,32 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
-import { type Order, CompleteOrder } from '@/lib/db/schema/orders';
+import { type Hero, CompleteHero } from '@/lib/db/schema/heroes';
 import Modal from '@/components/shared/Modal';
-import { type Customer } from '@/lib/db/schema/customers';
-import { type Payment } from '@/lib/db/schema/payments';
-import { useOptimisticOrders } from '@/app/[shopSlug]/orders/useOptimisticOrders';
+
+import { useOptimisticHeroes } from '@/app/[shopSlug]/heroes/useOptimisticHeroes';
 import { Button } from '@/components/ui/button';
-import OrderForm from './OrderForm';
+import HeroForm from './HeroForm';
 import { PlusIcon } from 'lucide-react';
 
-type TOpenModal = (order?: Order) => void;
+type TOpenModal = (hero?: Hero) => void;
 
-export default function OrderList({
-  orders,
-  customers,
-  payments,
+export default function HeroList({
+  heroes,
+  shopId,
 }: {
-  orders: CompleteOrder[];
-  customers: Customer[];
-  payments: Payment[];
+  heroes: CompleteHero[];
+  shopId: string;
 }) {
-  const { optimisticOrders, addOptimisticOrder } = useOptimisticOrders(
-    orders,
-    customers,
-    payments,
-  );
+  const { optimisticHeroes, addOptimisticHero } = useOptimisticHeroes(heroes);
   const [open, setOpen] = useState(false);
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const openModal = (order?: Order) => {
+  const [activeHero, setActiveHero] = useState<Hero | null>(null);
+  const openModal = (hero?: Hero) => {
     setOpen(true);
-    order ? setActiveOrder(order) : setActiveOrder(null);
+    hero ? setActiveHero(hero) : setActiveHero(null);
   };
   const closeModal = () => setOpen(false);
 
@@ -42,15 +36,14 @@ export default function OrderList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeOrder ? 'Edit Order' : 'Create Orders'}
+        title={activeHero ? 'Edit Hero' : 'Create Hero'}
       >
-        <OrderForm
-          order={activeOrder}
-          addOptimistic={addOptimisticOrder}
+        <HeroForm
+          shopId={shopId}
+          hero={activeHero}
+          addOptimistic={addOptimisticHero}
           openModal={openModal}
           closeModal={closeModal}
-          customers={customers}
-          payments={payments}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -58,12 +51,12 @@ export default function OrderList({
           +
         </Button>
       </div>
-      {optimisticOrders.length === 0 ? (
+      {optimisticHeroes.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
         <ul>
-          {optimisticOrders.map((order) => (
-            <Order order={order} key={order.order.id} openModal={openModal} />
+          {optimisticHeroes.map((hero) => (
+            <Hero hero={hero} key={hero.id} openModal={openModal} />
           ))}
         </ul>
       )}
@@ -71,16 +64,21 @@ export default function OrderList({
   );
 }
 
-const Order = ({
-  order,
+const Hero = ({
+  hero,
   openModal,
 }: {
-  order: CompleteOrder;
+  hero: CompleteHero;
   openModal: TOpenModal;
 }) => {
-  const optimistic = order.order.id === 'optimistic';
-  const deleting = order.order.id === 'delete';
+  const optimistic = hero.id === 'optimistic';
+  const deleting = hero.id === 'delete';
   const mutating = optimistic || deleting;
+  const pathname = usePathname();
+  const basePath = pathname.includes('heroes')
+    ? pathname
+    : pathname + '/heroes/';
+
   return (
     <li
       className={cn(
@@ -90,10 +88,10 @@ const Order = ({
       )}
     >
       <div className="w-full">
-        <div>{order.order.customerId}</div>
+        <div>{hero.title}</div>
       </div>
       <Button variant={'link'} asChild>
-        <Link href={'/orders/' + order.order.id}>Edit</Link>
+        <Link href={basePath + '/' + hero.id}>Edit</Link>
       </Button>
     </li>
   );
@@ -103,14 +101,14 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
   return (
     <div className="text-center">
       <h3 className="mt-2 text-sm font-semibold text-secondary-foreground">
-        No orders
+        No heroes
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Get started by creating a new order.
+        Get started by creating a new hero.
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Orders{' '}
+          <PlusIcon className="h-4" /> New Heroes{' '}
         </Button>
       </div>
     </div>
