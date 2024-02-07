@@ -1,17 +1,25 @@
-import { type Collection } from "@/lib/db/schema/collections";
-import { type ContentBlock } from "@/lib/db/schema/contentBlocks";
-import { type ContentBlockCollection, type CompleteContentBlockCollection } from "@/lib/db/schema/contentBlockCollections";
-import { OptimisticAction } from "@/lib/utils";
-import { useOptimistic } from "react";
+import { type Collection } from '@/lib/db/schema/collections';
+import { type ContentBlock } from '@/lib/db/schema/contentBlocks';
+import {
+  type ContentBlockCollection,
+  type CompleteContentBlockCollection,
+} from '@/lib/db/schema/contentBlockCollections';
+import { OptimisticAction } from '@/lib/utils';
+import { useOptimistic } from 'react';
 
-export type TAddOptimistic = (action: OptimisticAction<ContentBlockCollection>) => void;
+export type TAddOptimistic = (
+  action: OptimisticAction<ContentBlockCollection>,
+) => void;
 
 export const useOptimisticContentBlockCollections = (
   contentBlockCollections: CompleteContentBlockCollection[],
   collections: Collection[],
-  contentBlocks: ContentBlock[]
+  contentBlocks: ContentBlock[],
 ) => {
-  const [optimisticContentBlockCollections, addOptimisticContentBlockCollection] = useOptimistic(
+  const [
+    optimisticContentBlockCollections,
+    addOptimisticContentBlockCollection,
+  ] = useOptimistic(
     contentBlockCollections,
     (
       currentState: CompleteContentBlockCollection[],
@@ -30,22 +38,24 @@ export const useOptimisticContentBlockCollections = (
       const optimisticContentBlockCollection = {
         ...data,
         collection: optimisticCollection,
-       contentBlock: optimisticContentBlock,
-        id: "optimistic",
+        contentBlock: optimisticContentBlock,
+        id: 'optimistic',
       };
 
       switch (action.action) {
-        case "create":
+        case 'create':
           return currentState.length === 0
             ? [optimisticContentBlockCollection]
             : [...currentState, optimisticContentBlockCollection];
-        case "update":
+        case 'update':
           return currentState.map((item) =>
-            item.id === data.id ? { ...item, ...optimisticContentBlockCollection } : item,
+            item.id === data.id
+              ? { ...item, ...optimisticContentBlockCollection }
+              : item,
           );
-        case "delete":
+        case 'delete':
           return currentState.map((item) =>
-            item.id === data.id ? { ...item, id: "delete" } : item,
+            item.id === data.id ? { ...item, id: 'delete' } : item,
           );
         default:
           return currentState;
@@ -53,5 +63,8 @@ export const useOptimisticContentBlockCollections = (
     },
   );
 
-  return { addOptimisticContentBlockCollection, optimisticContentBlockCollections };
+  return {
+    addOptimisticContentBlockCollection,
+    optimisticContentBlockCollections,
+  };
 };

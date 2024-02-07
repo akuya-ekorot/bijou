@@ -1,14 +1,10 @@
-
-import { type Page, type CompletePage } from "@/lib/db/schema/pages";
-import { OptimisticAction } from "@/lib/utils";
-import { useOptimistic } from "react";
+import { type Page, type CompletePage } from '@/lib/db/schema/pages';
+import { OptimisticAction } from '@/lib/utils';
+import { useOptimistic } from 'react';
 
 export type TAddOptimistic = (action: OptimisticAction<Page>) => void;
 
-export const useOptimisticPages = (
-  pages: CompletePage[],
-  
-) => {
+export const useOptimisticPages = (pages: CompletePage[]) => {
   const [optimisticPages, addOptimisticPage] = useOptimistic(
     pages,
     (
@@ -17,26 +13,24 @@ export const useOptimisticPages = (
     ): CompletePage[] => {
       const { data } = action;
 
-      
-
       const optimisticPage = {
         ...data,
-        
-        id: "optimistic",
+
+        id: 'optimistic',
       };
 
       switch (action.action) {
-        case "create":
+        case 'create':
           return currentState.length === 0
             ? [optimisticPage]
             : [...currentState, optimisticPage];
-        case "update":
+        case 'update':
           return currentState.map((item) =>
             item.id === data.id ? { ...item, ...optimisticPage } : item,
           );
-        case "delete":
+        case 'delete':
           return currentState.map((item) =>
-            item.id === data.id ? { ...item, id: "delete" } : item,
+            item.id === data.id ? { ...item, id: 'delete' } : item,
           );
         default:
           return currentState;

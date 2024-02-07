@@ -1,24 +1,20 @@
-import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
+import { createPage, deletePage, updatePage } from '@/lib/api/pages/mutations';
 import {
-  createPage,
-  deletePage,
-  updatePage,
-} from "@/lib/api/pages/mutations";
-import { 
   pageIdSchema,
   insertPageParams,
-  updatePageParams 
-} from "@/lib/db/schema/pages";
+  updatePageParams,
+} from '@/lib/db/schema/pages';
 
 export async function POST(req: Request) {
   try {
     const validatedData = insertPageParams.parse(await req.json());
     const { page } = await createPage(validatedData);
 
-    revalidatePath("/pages"); // optional - assumes you will have named route same as entity
+    revalidatePath('/pages'); // optional - assumes you will have named route same as entity
 
     return NextResponse.json(page, { status: 201 });
   } catch (err) {
@@ -30,11 +26,10 @@ export async function POST(req: Request) {
   }
 }
 
-
 export async function PUT(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const id = searchParams.get('id');
 
     const validatedData = updatePageParams.parse(await req.json());
     const validatedParams = pageIdSchema.parse({ id });
@@ -54,7 +49,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const id = searchParams.get('id');
 
     const validatedParams = pageIdSchema.parse({ id });
     const { page } = await deletePage(validatedParams.id);

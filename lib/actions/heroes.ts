@@ -52,4 +52,3 @@ export const deleteHeroAction = async (input: HeroId) => {
     return handleErrors(e);
   }
 };
-

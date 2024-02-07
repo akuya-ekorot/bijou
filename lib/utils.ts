@@ -20,8 +20,7 @@ export type OptimisticAction<T> = {
   data: T;
 };
 
-
-export type Action = "create" | "update" | "delete";
+export type Action = 'create' | 'update' | 'delete';
 
 export type OptimisticAction<T> = {
   action: Action;

@@ -1,10 +1,10 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import Loading from "@/app/loading";
-import ContentBlockList from "@/components/contentBlocks/ContentBlockList";
-import { getContentBlocks } from "@/lib/api/contentBlocks/queries";
-import { getPages } from "@/lib/api/pages/queries";
-import { checkAuth } from "@/lib/auth/utils";
+import Loading from '@/app/loading';
+import ContentBlockList from '@/components/contentBlocks/ContentBlockList';
+import { getContentBlocks } from '@/lib/api/contentBlocks/queries';
+import { getPages } from '@/lib/api/pages/queries';
+import { checkAuth } from '@/lib/auth/utils';
 
 export const revalidate = 0;
 
