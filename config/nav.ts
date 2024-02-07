@@ -5,7 +5,6 @@ import {
   FileStack,
   Globe,
   HomeIcon,
-  Image,
   LibraryBig,
   Tags,
 } from 'lucide-react';
@@ -23,23 +22,14 @@ export const defaultLinks: SidebarLink[] = [
 
 export const additionalLinks: AdditionalLinks[] = [
   {
-    title: 'Entities',
+    title: 'Shop Resources',
     links: [
       {
-        href: '/content-blocks',
-        title: 'Content Blocks',
-        icon: File,
+        href: '/products',
+        title: 'Products',
+        icon: Tags,
       },
-      {
-        href: '/heroes',
-        title: 'Heroes',
-        icon: File,
-      },
-      {
-        href: '/pages',
-        title: 'Pages',
-        icon: FileStack,
-      },
+      { href: '/collections', title: 'Collections', icon: LibraryBig },
       {
         href: '/orders',
         title: 'Orders',
@@ -50,18 +40,26 @@ export const additionalLinks: AdditionalLinks[] = [
         title: 'Customers',
         icon: Globe,
       },
+    ],
+  },
+  {
+    title: 'Shop Pages',
+    links: [
       {
-        href: '/payments',
-        title: 'Payments',
-        icon: Globe,
+        href: '/pages',
+        title: 'Pages',
+        icon: FileStack,
       },
       {
-        href: '/products',
-        title: 'Products',
-        icon: Tags,
+        href: '/content-blocks',
+        title: 'Content Blocks',
+        icon: File,
       },
-      { href: '/collections', title: 'Collections', icon: LibraryBig },
-      { href: '/images', title: 'Images', icon: Image },
+      {
+        href: '/heroes',
+        title: 'Heroes',
+        icon: File,
+      },
     ],
   },
 ];
